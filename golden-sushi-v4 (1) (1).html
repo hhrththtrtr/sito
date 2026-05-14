@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Golden Sushi — Schio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Shippori+Mincho:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-pale: #f5e9c8;
+      --gold-dim: rgba(201,168,76,0.12);
+      --ink:  #0b0a08;
+      --ink2: #141210;
+      --ink3: #1e1b15;
+      --stone: #272318;
+      --ash: #857a60;
+      --ash-light: #a89880;
+      --paper: #f4ede0;
+      --paper-dim: rgba(244,237,224,0.6);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; font-size:16px; }
+
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle grain */
+    body::after {
+      content:'';
+      position:fixed; inset:0;
+      pointer-events:none; z-index:999;
+      opacity:.018;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 56px; height:76px;
+      transition: background .5s, border-color .5s;
+    }
+    nav.scrolled {
+      background: rgba(11,10,8,.94);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,.14);
+    }
+
+    .nav-logo {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.3rem; font-weight:600;
+      letter-spacing:.22em; text-transform:uppercase;
+      color:var(--gold); text-decoration:none;
+    }
+
+    .nav-links { display:flex; gap:44px; list-style:none; }
+    .nav-links a {
+      font-size:.68rem; letter-spacing:.26em; text-transform:uppercase;
+      color:var(--paper); text-decoration:none;
+      opacity:.55; transition:opacity .22s, color .22s;
+    }
+    .nav-links a:hover { opacity:1; color:var(--gold); }
+
+    .nav-cta {
+      font-size:.68rem; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--ink); background:var(--gold);
+      padding:11px 26px; border-radius:2px;
+      text-decoration:none; font-weight:500;
+      transition: background .22s, transform .22s;
+    }
+    .nav-cta:hover { background:var(--gold-light); transform:translateY(-1px); }
+
+    /* Mobile nav toggle */
+    .nav-burger { display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none; padding:4px; }
+    .nav-burger span { display:block; width:24px; height:1px; background:var(--paper); opacity:.7; transition:all .3s; }
+
+    @media(max-width:860px){
+      nav { padding:0 24px; }
+      .nav-links,.nav-cta { display:none; }
+      .nav-burger { display:flex; }
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position:relative; height:100vh; min-height:600px;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; overflow:hidden;
+    }
+
+    .hero-bg {
+      position:absolute; inset:0;
+      background:
+        radial-gradient(ellipse 80% 70% at 50% 45%, rgba(201,168,76,.065) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 60% at 85% 85%, rgba(139,26,26,.05) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 10% 20%, rgba(201,168,76,.03) 0%, transparent 50%);
+    }
+
+    /* Subtle grid */
+    .hero-grid {
+      position:absolute; inset:0; pointer-events:none;
+      background-image:
+        linear-gradient(rgba(201,168,76,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 80%);
+    }
+
+    .hero-rings {
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      width:900px; height:900px; pointer-events:none;
+    }
+    .ring {
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      border:1px solid rgba(201,168,76,.07);
+    }
+    .ring:nth-child(1){ width:280px; height:280px; animation:ring-pulse 7s ease-in-out infinite; }
+    .ring:nth-child(2){ width:520px; height:520px; animation:ring-pulse 7s ease-in-out infinite 1.4s; }
+    .ring:nth-child(3){ width:760px; height:760px; animation:ring-pulse 7s ease-in-out infinite 2.8s; border-color:rgba(201,168,76,.04); }
+    @keyframes ring-pulse {
+      0%,100%{ opacity:.35; transform:translate(-50%,-50%) scale(1); }
+      50%     { opacity:.9;  transform:translate(-50%,-50%) scale(1.018); }
+    }
+
+    .hero-kanji {
+      position:absolute;
+      font-family:'Shippori Mincho',serif;
+      color:rgba(201,168,76,.045);
+      pointer-events:none; user-select:none; line-height:1;
+      font-size:clamp(180px,26vw,340px);
+    }
+    .kanji-left  { left:-2vw;  top:50%; transform:translateY(-52%); }
+    .kanji-right { right:-2vw; top:50%; transform:translateY(-48%); }
+
+    /* Thin horizontal rule across hero */
+    .hero-rule {
+      position:absolute;
+      top:50%; left:0; right:0;
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(201,168,76,.12) 20%, rgba(201,168,76,.12) 80%, transparent);
+      pointer-events:none;
+    }
+
+    .hero-inner { position:relative; z-index:1; padding:0 2rem; }
+
+    .hero-eyebrow {
+      font-size:.68rem; letter-spacing:.55em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:2.4rem;
+      opacity:0; animation:fadeUp .9s ease forwards .3s;
+      display:flex; align-items:center; justify-content:center; gap:1rem;
+    }
+    .hero-eyebrow::before,.hero-eyebrow::after{
+      content:''; display:block;
+      width:40px; height:1px;
+      background:linear-gradient(90deg,transparent,var(--gold));
+      opacity:.5;
+    }
+    .hero-eyebrow::after{ background:linear-gradient(270deg,transparent,var(--gold)); }
+
+    .hero-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(70px,13vw,164px);
+      font-weight:300; line-height:.9;
+      letter-spacing:-.02em;
+      opacity:0; animation:fadeUp .9s ease forwards .5s;
+    }
+    .hero-title em { display:block; font-style:italic; color:var(--gold); }
+
+    .hero-sub {
+      margin-top:2.2rem;
+      font-size:.78rem; letter-spacing:.3em; text-transform:uppercase;
+      color:var(--ash-light);
+      opacity:0; animation:fadeUp .9s ease forwards .75s;
+    }
+
+    .hero-divider {
+      width:1px; height:40px;
+      background:linear-gradient(to bottom, rgba(201,168,76,.5), transparent);
+      margin:2.4rem auto 0;
+      opacity:0; animation:fadeIn .9s ease forwards .9s;
+    }
+
+    .hero-cta-group {
+      margin-top:2.4rem;
+      display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+      opacity:0; animation:fadeUp .9s ease forwards 1s;
+    }
+
+    .btn-gold {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:14px 36px; background:var(--gold);
+      color:var(--ink); font-size:.72rem; letter-spacing:.2em;
+      text-transform:uppercase; font-weight:500; text-decoration:none;
+      border-radius:2px; transition:all .28s;
+      border:1px solid var(--gold);
+    }
+    .btn-gold:hover { background:var(--gold-light); border-color:var(--gold-light); transform:translateY(-2px); }
+
+    .btn-outline {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:14px 36px;
+      border:1px solid rgba(201,168,76,.38);
+      color:var(--gold); font-size:.72rem; letter-spacing:.2em;
+      text-transform:uppercase; text-decoration:none;
+      border-radius:2px; transition:all .28s;
+    }
+    .btn-outline:hover { border-color:var(--gold); background:rgba(201,168,76,.06); transform:translateY(-2px); }
+
+    .scroll-hint {
+      position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:10px;
+      opacity:0; animation:fadeIn .9s ease forwards 1.5s;
+    }
+    .scroll-hint span { font-size:.6rem; letter-spacing:.4em; text-transform:uppercase; color:var(--ash); }
+    .scroll-line {
+      width:1px; height:44px;
+      background:linear-gradient(to bottom, var(--gold), transparent);
+      animation:line-down 2.2s ease-in-out infinite;
+    }
+    @keyframes line-down { 0%,100%{opacity:.25;transform:scaleY(.4);transform-origin:top} 50%{opacity:.9;transform:scaleY(1)} }
+
+    /* ─── SHARED SECTION STYLES ─── */
+    section { padding:120px 56px; }
+
+    .s-label {
+      font-size:.65rem; letter-spacing:.5em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:1.2rem; display:block;
+    }
+    .s-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(38px,5.5vw,68px);
+      font-weight:300; line-height:1.04;
+    }
+    .s-title em { font-style:italic; color:var(--gold); }
+
+    /* Ornament divider */
+    .ornament {
+      display:flex; align-items:center; gap:20px;
+      justify-content:center; padding:16px 0;
+    }
+    .ornament::before,.ornament::after {
+      content:''; flex:1; max-width:100px; height:1px;
+    }
+    .ornament::before { background:linear-gradient(90deg,transparent,rgba(201,168,76,.4)); }
+    .ornament::after  { background:linear-gradient(270deg,transparent,rgba(201,168,76,.4)); }
+    .ornament-symbol {
+      font-family:'Shippori Mincho',serif;
+      font-size:18px; color:var(--gold); line-height:1;
+    }
+
+    /* ─── ABOUT ─── */
+    .about-wrap { background:var(--ink2); }
+
+    #about {
+      background:var(--ink2);
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:96px; align-items:start;
+      max-width:1280px; margin:0 auto;
+    }
+
+    .about-text p {
+      margin-top:1.8rem; font-size:1rem; line-height:1.85;
+      color:var(--paper-dim); max-width:460px;
+    }
+    .about-text .btn-gold { margin-top:2.8rem; }
+
+    /* Feature numbers */
+    .features {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:2px; margin-top:4rem;
+    }
+    .feature {
+      background:rgba(255,255,255,.025);
+      border:1px solid rgba(201,168,76,.09);
+      padding:2rem 1.8rem;
+      transition:background .3s, border-color .3s;
+    }
+    .feature:hover { background:rgba(201,168,76,.04); border-color:rgba(201,168,76,.2); }
+    .feature-num {
+      font-family:'Cormorant Garamond',serif;
+      font-size:2.4rem; font-weight:300;
+      color:rgba(201,168,76,.28); line-height:1; margin-bottom:.8rem;
+    }
+    .feature h4 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.15rem; font-weight:400; margin-bottom:.5rem;
+    }
+    .feature p { font-size:.82rem; color:var(--ash); line-height:1.65; }
+
+    .pillars {
+      display:flex; flex-direction:column; gap:2px; padding-top:2rem;
+    }
+    .pillar {
+      background:rgba(255,255,255,.025);
+      border:1px solid rgba(201,168,76,.09);
+      border-radius:3px; padding:26px 30px;
+      display:flex; gap:22px; align-items:flex-start;
+      transition:background .3s, border-color .3s;
+    }
+    .pillar:hover { background:rgba(201,168,76,.045); border-color:rgba(201,168,76,.22); }
+    .pillar-num {
+      font-family:'Cormorant Garamond',serif;
+      font-size:2.2rem; font-weight:300;
+      color:rgba(201,168,76,.28); line-height:1; flex-shrink:0;
+    }
+    .pillar h3 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.2rem; font-weight:400; margin-bottom:6px;
+    }
+    .pillar p { font-size:.82rem; color:var(--ash); line-height:1.65; }
+
+    /* ─── MENU ─── */
+    #menu { background:var(--ink); text-align:center; }
+    .s-desc {
+      color:var(--ash-light); font-size:.95rem;
+      max-width:500px; margin:1.2rem auto 4.5rem; line-height:1.8;
+    }
+
+    .menu-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      max-width:1140px; margin:0 auto;
+      border:1px solid rgba(201,168,76,.1);
+      border-radius:4px; overflow:hidden;
+    }
+
+    .menu-card {
+      position:relative;
+      background:var(--ink2);
+      padding:52px 40px; text-align:left;
+      overflow:hidden;
+      transition:background .35s;
+      border-right:1px solid rgba(201,168,76,.08);
+    }
+    .menu-card:last-child { border-right:none; }
+    .menu-card:hover { background:var(--ink3); }
+
+    /* Animated gold line on hover */
+    .menu-card::after {
+      content:''; position:absolute;
+      top:0; left:0; width:100%; height:2px;
+      background:var(--gold);
+      transform:scaleX(0); transform-origin:left;
+      transition:transform .4s ease;
+    }
+    .menu-card:hover::after { transform:scaleX(1); }
+
+    .menu-card::before {
+      content:attr(data-kanji);
+      position:absolute; bottom:-16px; right:-8px;
+      font-family:'Shippori Mincho',serif;
+      font-size:130px; color:rgba(201,168,76,.035);
+      line-height:1; pointer-events:none;
+      transition:color .35s;
+    }
+    .menu-card:hover::before { color:rgba(201,168,76,.065); }
+
+    .menu-card-tag {
+      display:inline-block; font-size:.65rem;
+      letter-spacing:.22em; text-transform:uppercase;
+      color:var(--gold); border:1px solid rgba(201,168,76,.28);
+      padding:4px 12px; border-radius:2px; margin-bottom:1.8rem;
+    }
+    .menu-card h3 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.75rem; font-weight:400; margin-bottom:1rem;
+    }
+    .menu-card p { font-size:.84rem; color:var(--ash); line-height:1.75; }
+    .menu-card .arrow {
+      display:inline-flex; align-items:center; gap:6px;
+      margin-top:2rem; font-size:.7rem; letter-spacing:.2em;
+      text-transform:uppercase; color:var(--gold);
+      text-decoration:none; opacity:.6; transition:opacity .2s, gap .2s;
+    }
+    .menu-card .arrow:hover { opacity:1; gap:10px; }
+    .menu-card .arrow::after { content:'→'; }
+
+    /* ─── PROMO / NEWSLETTER ─── */
+    #promo {
+      background:var(--ink2);
+      text-align:center; position:relative; overflow:hidden;
+    }
+    #promo::before {
+      content:'金';
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      font-family:'Shippori Mincho',serif;
+      font-size:clamp(300px,50vw,620px);
+      color:rgba(201,168,76,.022);
+      pointer-events:none; line-height:1;
+    }
+    .promo-inner { position:relative; z-index:1; max-width:520px; margin:0 auto; }
+    .promo-inner .s-title { margin-bottom:1.1rem; }
+    .promo-inner > p { font-size:.95rem; color:var(--ash-light); line-height:1.8; margin-bottom:2.8rem; }
+
+    .subscribe-form {
+      display:flex; border:1px solid rgba(201,168,76,.28);
+      border-radius:3px; overflow:hidden;
+    }
+    .subscribe-form input {
+      flex:1; background:rgba(255,255,255,.04);
+      border:none; padding:16px 20px;
+      color:var(--paper); font-family:'DM Sans',sans-serif;
+      font-size:.85rem; outline:none;
+      transition:background .2s;
+    }
+    .subscribe-form input:focus { background:rgba(255,255,255,.065); }
+    .subscribe-form input::placeholder { color:var(--ash); }
+    .subscribe-form button {
+      background:var(--gold); color:var(--ink);
+      border:none; padding:0 28px;
+      font-family:'DM Sans',sans-serif; font-size:.7rem;
+      letter-spacing:.2em; text-transform:uppercase;
+      font-weight:500; cursor:pointer;
+      transition:background .2s; white-space:nowrap;
+    }
+    .subscribe-form button:hover { background:var(--gold-light); }
+
+    /* ─── CONTATTI ─── */
+    #contatti {
+      background:var(--ink);
+      display:grid; grid-template-columns:1fr 1fr 1fr;
+      padding:0; gap:0;
+    }
+
+    .contatti-block {
+      padding:84px 60px;
+      border-right:1px solid rgba(255,255,255,.055);
+      position:relative; overflow:hidden;
+      transition:background .35s;
+    }
+    .contatti-block:last-child { border-right:none; }
+    .contatti-block:hover { background:rgba(201,168,76,.025); }
+
+    /* Top accent line */
+    .contatti-block::before {
+      content:''; position:absolute;
+      top:0; left:0; right:0; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);
+    }
+
+    .contatti-block .s-label { margin-bottom:1.6rem; }
+    .contatti-block h3 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:2rem; font-weight:300;
+      line-height:1.25; margin-bottom:1.4rem;
+    }
+    .contatti-block a {
+      color:var(--gold); text-decoration:none;
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.5rem; font-weight:400;
+      transition:color .2s;
+    }
+    .contatti-block a:hover { color:var(--gold-light); }
+
+    .directions-link {
+      display:inline-flex; align-items:center; gap:6px;
+      margin-top:1.4rem; font-family:'DM Sans',sans-serif!important;
+      font-size:.72rem!important; letter-spacing:.18em;
+      text-transform:uppercase; opacity:.65;
+      transition:opacity .2s!important;
+    }
+    .directions-link:hover { opacity:1!important; }
+
+    .orari-list { list-style:none; margin-top:.5rem; }
+    .orari-list li {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:11px 0; border-bottom:1px solid rgba(255,255,255,.05);
+      font-size:.88rem; color:var(--paper-dim);
+    }
+    .orari-list li:last-child { border-bottom:none; }
+    .orari-list span:first-child { color:var(--paper); font-weight:400; }
+    .orari-list span:last-child { color:var(--gold); font-size:.82rem; }
+
+    .social-links { display:flex; gap:12px; margin-top:2rem; }
+    .social-link {
+      width:44px; height:44px;
+      border:1px solid rgba(201,168,76,.28);
+      border-radius:50%; display:flex;
+      align-items:center; justify-content:center;
+      color:var(--gold); text-decoration:none;
+      font-size:.75rem; font-weight:500;
+      transition:all .25s;
+    }
+    .social-link:hover { background:var(--gold); color:var(--ink); border-color:var(--gold); }
+
+    /* ─── MAP ─── */
+    .map-section { height:420px; position:relative; overflow:hidden; }
+    .map-section iframe {
+      width:100%; height:100%; border:none;
+      filter:grayscale(85%) invert(92%) contrast(.82) sepia(18%);
+      opacity:.65;
+    }
+    .map-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to right,
+        rgba(11,10,8,.65) 0%,
+        transparent 30%,
+        transparent 70%,
+        rgba(11,10,8,.65) 100%);
+      pointer-events:none;
+    }
+    .map-overlay-top {
+      position:absolute; top:0; left:0; right:0; height:60px;
+      background:linear-gradient(to bottom,var(--ink),transparent);
+      pointer-events:none;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background:var(--ink2);
+      border-top:1px solid rgba(201,168,76,.1);
+      padding:52px 56px;
+      display:flex; align-items:center;
+      justify-content:space-between; flex-wrap:wrap; gap:24px;
+    }
+
+    .footer-left { display:flex; flex-direction:column; gap:8px; }
+    .footer-logo {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.2rem; font-weight:600;
+      letter-spacing:.22em; text-transform:uppercase; color:var(--gold);
+    }
+    footer p { font-size:.72rem; color:var(--ash); letter-spacing:.06em; }
+
+    /* ─── REVEAL ─── */
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .9s ease, transform .9s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:980px){
+      section { padding:80px 28px; }
+      #about { grid-template-columns:1fr; gap:56px; }
+      .menu-grid { grid-template-columns:1fr; border-radius:3px; }
+      .menu-card { border-right:none; border-bottom:1px solid rgba(201,168,76,.08); }
+      .menu-card:last-child { border-bottom:none; }
+      #contatti { grid-template-columns:1fr; }
+      .contatti-block { border-right:none; border-bottom:1px solid rgba(255,255,255,.06); padding:56px 32px; }
+      .contatti-block:last-child { border-bottom:none; }
+      footer { padding:40px 28px; }
+      .hero-kanji { display:none; }
+    }
+
+    @media(max-width:600px){
+      .hero-cta-group { flex-direction:column; align-items:center; }
+      .btn-gold,.btn-outline { width:100%; max-width:280px; justify-content:center; }
+      .subscribe-form { flex-direction:column; }
+      .subscribe-form button { padding:14px; }
+      #prenota { padding:80px 24px !important; }
+      #prenota > div > div:last-child { padding:1.5rem 1.2rem !important; }
+      #prenota > div > div:last-child > div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr !important; }
+    }
+
+    /* ─── APP MODAL ─── */
+    .app-modal-backdrop {
+      display:none; position:fixed; inset:0; z-index:200;
+      background:rgba(5,4,3,.88); backdrop-filter:blur(10px);
+      align-items:center; justify-content:center; padding:20px;
+    }
+    .app-modal-backdrop.open { display:flex; }
+
+    .app-modal {
+      background:#141210; border:1px solid rgba(201,168,76,.2);
+      border-radius:16px; width:100%; max-width:480px;
+      max-height:92vh; display:flex; flex-direction:column;
+      overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,.7);
+      animation:modalIn .35s cubic-bezier(.22,1,.36,1);
+    }
+    @keyframes modalIn {
+      from{opacity:0;transform:translateY(32px) scale(.97)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    /* App scroller */
+    .app-inner { overflow-y:auto; flex:1; scrollbar-width:thin; scrollbar-color:rgba(201,168,76,.2) transparent; }
+    .app-inner::-webkit-scrollbar { width:4px; }
+    .app-inner::-webkit-scrollbar-thumb { background:rgba(201,168,76,.2); border-radius:2px; }
+
+    /* Modal close bar */
+    .modal-topbar {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:.75rem 1rem; border-bottom:1px solid rgba(201,168,76,.12);
+      flex-shrink:0; background:#0f0d0b;
+    }
+    .modal-topbar-logo {
+      font-family:'Cormorant Garamond',serif;
+      font-size:1rem; font-weight:600; letter-spacing:.18em;
+      text-transform:uppercase; color:#c9a84c;
+    }
+    .modal-close {
+      background:none; border:1px solid rgba(201,168,76,.2);
+      border-radius:50%; color:#857a60; width:30px; height:30px;
+      cursor:pointer; font-size:1rem; display:flex;
+      align-items:center; justify-content:center;
+      transition:all .2s; flex-shrink:0;
+    }
+    .modal-close:hover { border-color:rgba(201,168,76,.5); color:#c9a84c; }
+
+    /* ── APP INNER STYLES (scoped) ── */
+    .gs { background:#141210; font-family:'DM Sans',sans-serif; color:#f0ebe0; }
+    .page { display:none; }
+    .page.active { display:block; }
+
+    /* Header */
+    .gs-header { text-align:center; padding:1.2rem 1rem .8rem; border-bottom:1px solid rgba(201,168,76,.12); }
+    .logo-svg { width:40px; height:40px; margin:0 auto .4rem; display:block; }
+    .logo-text { font-family:'Cormorant Garamond',serif; font-size:1.25rem; font-weight:600; letter-spacing:.22em; color:#c9a84c; text-transform:uppercase; }
+    .logo-sub { font-size:.65rem; letter-spacing:.25em; color:#857a60; margin-top:3px; text-transform:uppercase; }
+
+    /* Tab bar */
+    .tab-bar { display:flex; background:#1a1712; border-bottom:1px solid rgba(201,168,76,.1); }
+    .tab-btn { flex:1; background:none; border:none; color:#857a60; font-family:'DM Sans',sans-serif; font-size:.72rem; padding:.65rem .4rem; cursor:pointer; border-bottom:2px solid transparent; transition:all .15s; display:flex; align-items:center; justify-content:center; gap:5px; letter-spacing:.03em; }
+    .tab-btn:hover { color:#f0ebe0; }
+    .tab-btn.active { color:#c9a84c; border-bottom-color:#c9a84c; font-weight:500; }
+
+    /* Category nav */
+    .nav-outer { background:#1a1712; border-bottom:1px solid rgba(201,168,76,.1); padding:.5rem .9rem; }
+    .nav-scroll { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; flex-wrap:wrap; justify-content:center; }
+    .nav-scroll::-webkit-scrollbar { display:none; }
+    .nav-btn { flex-shrink:0; background:transparent; border:1px solid rgba(201,168,76,.2); border-radius:100px; color:#857a60; font-family:'DM Sans',sans-serif; font-size:.65rem; letter-spacing:.06em; padding:4px 11px; cursor:pointer; transition:all .15s; white-space:nowrap; text-transform:uppercase; }
+    .nav-btn:hover,.nav-btn.active { background:#c9a84c; border-color:#c9a84c; color:#141210; font-weight:500; }
+
+    /* Menu grid */
+    .sec-title { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:500; color:#e8c97a; letter-spacing:.1em; padding:1.2rem 1.1rem .2rem; font-style:italic; }
+    .sec-hint { font-size:.65rem; color:#857a60; padding:0 1.1rem .6rem; letter-spacing:.04em; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; padding:0 .9rem 1.2rem; }
+    .divider { height:1px; background:rgba(201,168,76,.08); margin:0 .9rem; }
+
+    .card { background:#1c1910; border:1px solid rgba(201,168,76,.1); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; cursor:pointer; transition:transform .17s,border-color .17s; }
+    .card:hover { transform:translateY(-3px); border-color:rgba(201,168,76,.32); }
+    .card-img { width:100%; aspect-ratio:1; background:linear-gradient(145deg,#1e1b12,#161310); display:flex; align-items:center; justify-content:center; font-size:2rem; border-bottom:1px solid rgba(201,168,76,.08); }
+    .card-body { padding:8px 10px 10px; flex:1; display:flex; flex-direction:column; gap:4px; }
+    .card-num { font-size:.62rem; color:#c9a84c; letter-spacing:.08em; font-weight:500; background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.18); border-radius:3px; padding:1px 5px; display:inline-block; }
+    .card-name { font-size:.78rem; font-weight:400; color:#f0ebe0; line-height:1.35; flex:1; margin-top:4px; }
+    .card-footer { display:flex; align-items:center; justify-content:space-between; margin-top:6px; padding-top:6px; border-top:1px solid rgba(201,168,76,.08); }
+    .card-price { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:500; color:#e8c97a; }
+    .add-btn { background:#1f5c30; border:1px solid rgba(46,160,79,.3); border-radius:7px; color:#b8e8c8; font-family:'DM Sans',sans-serif; font-size:.65rem; font-weight:400; padding:4px 8px; cursor:pointer; transition:all .13s; display:flex; align-items:center; gap:3px; }
+    .add-btn:hover { background:#2ea04f; border-color:transparent; color:#fff; }
+    .add-btn.added { background:rgba(46,160,79,.15); border-color:#2ea04f; color:#2ea04f; }
+
+    /* Bottom bar */
+    .bottom-bar { background:#1a1712; border-top:1px solid rgba(201,168,76,.15); padding:.6rem 1.1rem; display:flex; align-items:center; justify-content:space-between; gap:.8rem; }
+    .bar-info { font-size:.78rem; color:#857a60; }
+    .bar-total { color:#e8c97a; font-weight:500; }
+    .checkout-btn { background:#c9a84c; border:none; border-radius:8px; color:#141210; font-family:'DM Sans',sans-serif; font-size:.75rem; font-weight:500; padding:7px 14px; cursor:pointer; display:flex; align-items:center; gap:5px; transition:background .13s; }
+    .checkout-btn:hover { background:#e8c97a; }
+
+    /* Cart & forms */
+    .sub-page { padding:.9rem 1.1rem 1.5rem; }
+    .sub-title { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-style:italic; color:#e8c97a; letter-spacing:.1em; margin-bottom:1rem; }
+    .cart-empty { text-align:center; padding:2.5rem 1rem; color:#857a60; font-size:.85rem; }
+    .cart-item { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid rgba(201,168,76,.1); }
+    .ci-emoji { font-size:1.4rem; width:34px; text-align:center; flex-shrink:0; }
+    .ci-info { flex:1; }
+    .ci-name { font-size:.8rem; font-weight:400; color:#f0ebe0; }
+    .ci-price { font-size:.7rem; color:#857a60; margin-top:2px; }
+    .ci-ctrl { display:flex; align-items:center; gap:6px; }
+    .qty-btn { background:#222; border:1px solid rgba(201,168,76,.18); border-radius:6px; color:#f0ebe0; width:24px; height:24px; cursor:pointer; font-size:.85rem; display:flex; align-items:center; justify-content:center; transition:border-color .12s; }
+    .qty-btn:hover { border-color:#c9a84c; }
+    .qty-val { font-size:.8rem; font-weight:500; min-width:14px; text-align:center; }
+    .del-btn { background:none; border:none; color:#c0392b; cursor:pointer; font-size:.9rem; padding:2px; opacity:.6; }
+    .del-btn:hover { opacity:1; }
+    .summary-box { margin-top:1rem; background:#1c1910; border:1px solid rgba(201,168,76,.1); border-radius:10px; padding:.9rem 1.1rem; }
+    .sum-row { display:flex; justify-content:space-between; font-size:.78rem; color:#857a60; padding:3px 0; }
+    .sum-row.total { color:#f0ebe0; font-weight:500; font-size:.88rem; border-top:1px solid rgba(201,168,76,.12); margin-top:7px; padding-top:9px; }
+    .sum-row.total span:last-child { color:#e8c97a; }
+    .sect-label { font-size:.62rem; color:#857a60; letter-spacing:.1em; text-transform:uppercase; margin:.9rem 0 .4rem; }
+    .del-row { display:flex; gap:7px; }
+    .d-btn { flex:1; background:#1c1910; border:1px solid rgba(201,168,76,.18); border-radius:9px; color:#857a60; font-family:'DM Sans',sans-serif; font-size:.72rem; padding:8px 6px; cursor:pointer; transition:all .15s; text-align:center; }
+    .d-btn.sel { border-color:#c9a84c; color:#c9a84c; background:rgba(201,168,76,.07); }
+    .field-input { width:100%; background:#1c1910; border:1px solid rgba(201,168,76,.18); border-radius:8px; color:#f0ebe0; font-family:'DM Sans',sans-serif; font-size:.82rem; padding:9px 12px; outline:none; transition:border-color .13s; margin-top:.4rem; }
+    .field-input:focus { border-color:rgba(201,168,76,.5); }
+    .field-input::placeholder { color:#857a60; }
+    .suggest-box { background:#1c1910; border:1px solid rgba(201,168,76,.18); border-radius:9px; margin-top:4px; overflow:hidden; display:none; }
+    .suggest-item { padding:8px 12px; font-size:.78rem; color:#f0ebe0; cursor:pointer; border-bottom:1px solid rgba(201,168,76,.08); transition:background .12s; }
+    .suggest-item:last-child { border-bottom:none; }
+    .suggest-item:hover { background:rgba(201,168,76,.08); color:#e8c97a; }
+    .addr-status { margin-top:5px; font-size:.72rem; padding:5px 9px; border-radius:7px; display:none; line-height:1.5; }
+    .addr-status.checking { display:block; color:#857a60; background:#1c1910; }
+    .addr-status.ok  { display:block; color:#7ee8a2; background:rgba(46,160,79,.12); border:1px solid rgba(46,160,79,.3); }
+    .addr-status.far { display:block; color:#f0c080; background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.3); }
+    .addr-status.err { display:block; color:#f08080; background:rgba(192,57,43,.1); border:1px solid rgba(192,57,43,.25); }
+    .preview-box { margin-top:.9rem; background:#0a1a0f; border:1px solid rgba(37,211,102,.2); border-radius:10px; padding:.8rem 1rem; }
+    .preview-label { font-size:.62rem; color:#25D366; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.5rem; display:flex; align-items:center; gap:5px; }
+    .preview-msg { font-size:.72rem; color:#d0e8d8; line-height:1.65; white-space:pre-wrap; font-family:monospace; }
+    .send-btn { width:100%; margin-top:.9rem; background:#25D366; border:none; border-radius:10px; color:#fff; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:500; padding:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; transition:background .13s; }
+    .send-btn:hover { background:#1ebe58; }
+    .send-btn:disabled { opacity:.4; pointer-events:none; }
+
+    /* Booking */
+    .booking-wrap { padding:.9rem 1.1rem 1.5rem; }
+    .booking-title { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-style:italic; color:#e8c97a; letter-spacing:.1em; margin-bottom:.3rem; }
+    .booking-sub { font-size:.72rem; color:#857a60; margin-bottom:1.2rem; line-height:1.6; }
+    .form-row { margin-bottom:.8rem; }
+    .form-label { font-size:.62rem; color:#857a60; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.3rem; display:block; }
+    .time-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(72px,1fr)); gap:6px; margin-top:.4rem; }
+    .time-chip { background:#1c1910; border:1px solid rgba(201,168,76,.18); border-radius:7px; color:#857a60; font-family:'DM Sans',sans-serif; font-size:.75rem; padding:6px 4px; cursor:pointer; text-align:center; transition:all .15s; }
+    .time-chip:hover { border-color:rgba(201,168,76,.4); color:#f0ebe0; }
+    .time-chip.sel { background:rgba(201,168,76,.12); border-color:#c9a84c; color:#c9a84c; font-weight:500; }
+    .pax-row { display:flex; align-items:center; gap:10px; margin-top:.4rem; }
+    .pax-btn { background:#1c1910; border:1px solid rgba(201,168,76,.22); border-radius:7px; color:#f0ebe0; width:34px; height:34px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:border-color .13s; }
+    .pax-btn:hover { border-color:#c9a84c; }
+    .pax-val { font-size:1.1rem; font-weight:500; min-width:28px; text-align:center; color:#e8c97a; }
+    .booking-preview { margin-top:.9rem; background:#071218; border:1px solid rgba(37,151,211,.22); border-radius:10px; padding:.8rem 1rem; }
+    .booking-preview-label { font-size:.62rem; color:#5bb8d4; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.5rem; display:flex; align-items:center; gap:5px; }
+    .booking-preview-msg { font-size:.72rem; color:#c0dce8; line-height:1.65; white-space:pre-wrap; font-family:monospace; }
+    .wa-btn { width:100%; margin-top:.9rem; background:#25D366; border:none; border-radius:10px; color:#fff; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:500; padding:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; transition:background .13s; }
+    .wa-btn:hover { background:#1ebe58; }
+    .wa-btn:disabled { opacity:.4; pointer-events:none; }
+    .cart-badge { background:#c9a84c; color:#141210; border-radius:50%; width:16px; height:16px; font-size:.6rem; font-weight:500; display:inline-flex; align-items:center; justify-content:center; }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Golden Sushi</a>
+  <ul class="nav-links">
+    <li><a href="#about">Il Locale</a></li>
+    <li><a href="#menu">Menù</a></li>
+    <li><a href="#prenota">Prenota</a></li>
+    <li><a href="#contatti">Contatti</a></li>
+  </ul>
+  <a href="#prenota" class="nav-cta" onclick="document.getElementById('prenota').scrollIntoView({behavior:'smooth'});return false;">Prenota</a>
+  <button class="nav-burger" aria-label="Menu" onclick="this.classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-rings">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+  </div>
+  <div class="hero-rule"></div>
+  <div class="kanji-left hero-kanji">金</div>
+  <div class="kanji-right hero-kanji">鮨</div>
+
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Japanese Restaurant · Via Molise, 7 · Schio</p>
+    <h1 class="hero-title">
+      Golden<br><em>Sushi</em>
+    </h1>
+    <p class="hero-sub">L'esperienza giapponese più raffinata di Schio</p>
+    <div class="hero-divider"></div>
+    <div class="hero-cta-group">
+      <a href="#prenota" class="btn-gold" onclick="document.getElementById('prenota').scrollIntoView({behavior:'smooth'});return false;">Prenota un Tavolo</a>
+      <button onclick="openApp()" class="btn-outline" style="cursor:pointer;border:1px solid rgba(201,168,76,.38);font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:8px;padding:14px 36px;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;border-radius:2px;background:transparent;color:var(--gold);transition:all .28s" onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(201,168,76,.06)'" onmouseout="this.style.borderColor='rgba(201,168,76,.38)';this.style.background='transparent'">Ordina Takeaway</button>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scopri</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<div class="about-wrap">
+  <section id="about" class="reveal">
+    <div class="about-text">
+      <span class="s-label">Il Nostro Locale</span>
+      <h2 class="s-title">Ambiente<br><em>Sofisticato</em></h2>
+      <p>Un'esperienza gastronomica unica nel cuore di Schio. Ogni piatto è una celebrazione della tradizione culinaria giapponese, reinterpretata con creatività e ingredienti freschi selezionati con cura.</p>
+      <p>Dalla cucina aperta alle luci soffuse, ogni dettaglio del locale è pensato per regalarti una serata indimenticabile.</p>
+      <a href="menu.pdf" target="_blank" class="btn-gold">Scopri il Menù</a>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar">
+        <span class="pillar-num">01</span>
+        <div>
+          <h3>Design ricercato</h3>
+          <p>Un'atmosfera elegante e intima, pensata per ogni occasione speciale.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">02</span>
+        <div>
+          <h3>Cucina di qualità</h3>
+          <p>Ingredienti freschi, tecniche tradizionali, creatività italiana. Ogni morso racconta una storia.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">03</span>
+        <div>
+          <h3>Servizio impeccabile</h3>
+          <p>Un team pronto ad accoglierti e guidarti nell'esperienza Golden Sushi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ─── MENU ─── -->
+<section id="menu">
+  <div class="ornament reveal"><span class="ornament-symbol">✦</span></div>
+  <span class="s-label reveal" style="display:block;text-align:center">Il Nostro Menù</span>
+  <h2 class="s-title reveal" style="text-align:center">Sapori che<br><em>Sorprendono</em></h2>
+  <p class="s-desc reveal">Oltre 30 piatti tra crudi, cotti e bevande selezionate per accompagnare ogni momento della tua esperienza.</p>
+
+  <div class="menu-grid reveal">
+    <div class="menu-card" data-kanji="生">
+      <span class="menu-card-tag">Specialità</span>
+      <h3>Pietanze Crude</h3>
+      <p>Sashimi, nigiri, tartare e roll creativi. La freschezza del mare in ogni boccone, preparati al momento dal nostro chef.</p>
+      <a href="menu.pdf" target="_blank" class="arrow">Scopri</a>
+    </div>
+    <div class="menu-card" data-kanji="火">
+      <span class="menu-card-tag">+30 Piatti</span>
+      <h3>Pietanze Cotte</h3>
+      <p>Ramen, tempura, gyoza e molto altro. Ricette classiche giapponesi con un tocco di creatività italiana.</p>
+      <a href="menu.pdf" target="_blank" class="arrow">Scopri</a>
+    </div>
+    <div class="menu-card" data-kanji="酒">
+      <span class="menu-card-tag">Bevande</span>
+      <h3>Beverage & Vini</h3>
+      <p>Sake, vini selezionati, cocktail orientali e soft drink. La carta perfetta per completare la tua esperienza.</p>
+      <a href="menu.pdf" target="_blank" class="arrow">Scopri</a>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:56px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;" class="reveal">
+    <a href="menu.pdf" target="_blank" class="btn-gold" style="display:inline-flex;align-items:center;gap:8px;">
+      <i class="ti ti-file-type-pdf" style="font-size:16px"></i>
+      Scarica Menù PDF
+    </a>
+    <button onclick="openApp()" class="btn-outline" style="cursor:pointer;font-family:'DM Sans',sans-serif;background:transparent;">
+      <i class="ti ti-shopping-bag" style="font-size:15px"></i>
+      Ordina Takeaway Online
+    </button>
+  </div>
+</section>
+
+<!-- ─── PRENOTA ─── -->
+<section id="prenota" style="background:var(--ink2);padding:120px 56px;">
+  <div style="max-width:780px;margin:0 auto;">
+    <div class="ornament reveal"><span class="ornament-symbol">✦</span></div>
+    <span class="s-label reveal" style="display:block;text-align:center">Riserva il Tuo Posto</span>
+    <h2 class="s-title reveal" style="text-align:center;margin-bottom:.5rem;">Prenota un<br><em>Tavolo</em></h2>
+    <p style="text-align:center;color:var(--ash-light);font-size:.9rem;margin-bottom:3rem;line-height:1.8;" class="reveal">
+      🍣 Pranzo: 12:00 – 15:00 &nbsp;·&nbsp; 🌙 Cena: 18:30 – 23:00 &nbsp;·&nbsp; Aperto tutti i giorni
+    </p>
+
+    <div class="reveal" style="background:var(--ink3);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:2.5rem;">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+        <!-- Nome -->
+        <div>
+          <label class="form-label">Nome e cognome</label>
+          <input class="field-input" id="bkName" placeholder="Es. Mario Rossi" oninput="buildBookingPreview()" style="margin-top:.4rem"/>
+        </div>
+        <!-- Telefono -->
+        <div>
+          <label class="form-label">Numero di telefono</label>
+          <input class="field-input" id="bkPhone" placeholder="+39 320 123 4567" oninput="buildBookingPreview()" style="margin-top:.4rem"/>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem;">
+        <!-- Data -->
+        <div>
+          <label class="form-label">Data</label>
+          <input class="field-input" id="bkDate" type="date" oninput="onDateChange()" style="cursor:pointer;margin-top:.4rem"/>
+        </div>
+        <!-- Persone -->
+        <div>
+          <label class="form-label">Numero di persone</label>
+          <div class="pax-row" style="margin-top:.4rem;">
+            <button class="pax-btn" onclick="changePax(-1)">−</button>
+            <span class="pax-val" id="paxVal">2</span>
+            <button class="pax-btn" onclick="changePax(1)">+</button>
+            <span style="font-size:.78rem;color:var(--ash);margin-left:6px">persone</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Turno -->
+      <div id="sessionRow" style="display:none;margin-top:1.2rem;">
+        <label class="form-label">Turno</label>
+        <div style="display:flex;gap:8px;margin-top:.5rem;">
+          <button class="d-btn" id="sessLunch" onclick="selectSession('lunch')" style="flex:1;padding:14px 8px;">
+            🌞 Pranzo<span style="display:block;font-size:.65rem;margin-top:3px;opacity:.7">12:00 – 15:00</span>
+          </button>
+          <button class="d-btn" id="sessDinner" onclick="selectSession('dinner')" style="flex:1;padding:14px 8px;">
+            🌙 Cena<span style="display:block;font-size:.65rem;margin-top:3px;opacity:.7">18:30 – 23:00</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Orario -->
+      <div id="timeRow" style="display:none;margin-top:1.2rem;">
+        <label class="form-label">Scegli l'orario</label>
+        <div class="time-grid" id="timeGrid" style="margin-top:.5rem;"></div>
+      </div>
+
+      <!-- Note -->
+      <div style="margin-top:1.2rem;">
+        <label class="form-label">Note / Richieste speciali</label>
+        <textarea class="field-input" id="bkNote" rows="2" placeholder="Allergie, occasioni speciali, seggiolone per bambini…" oninput="buildBookingPreview()" style="resize:none;margin-top:.4rem;"></textarea>
+      </div>
+
+      <!-- Preview -->
+      <div class="booking-preview" id="bookingPreview" style="display:none;margin-top:1.2rem;">
+        <div class="booking-preview-label"><i class="ti ti-brand-whatsapp" style="font-size:13px"></i> Anteprima messaggio WhatsApp</div>
+        <div class="booking-preview-msg" id="bookingPreviewMsg"></div>
+      </div>
+
+      <!-- Submit -->
+      <button class="wa-btn" id="bookingBtn" onclick="sendBooking()" disabled style="margin-top:1.4rem;font-size:.88rem;">
+        <i class="ti ti-brand-whatsapp" style="font-size:18px"></i> Invia prenotazione su WhatsApp
+      </button>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── NEWSLETTER ─── -->
+<section id="promo">
+  <div class="promo-inner reveal">
+    <span class="s-label">Notizie & Promo</span>
+    <h2 class="s-title">Resta<br><em>Aggiornato</em></h2>
+    <p>Ricevi promozioni esclusive e novità direttamente nella tua inbox. Solo contenuti di valore, zero spam.</p>
+    <div class="subscribe-form">
+      <input type="email" placeholder="La tua email o cellulare">
+      <button type="submit">Iscriviti</button>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTATTI ─── -->
+<section id="contatti" style="padding:0">
+  <div class="contatti-block reveal">
+    <span class="s-label">Dove Siamo</span>
+    <h3>Via Molise, 7<br>Schio (VI)</h3>
+    <a href="https://golden-sushi.com/indicazioni-stradali" class="directions-link">→ Indicazioni stradali</a>
+  </div>
+  <div class="contatti-block reveal">
+    <span class="s-label">Contattaci</span>
+    <h3>Telefono</h3>
+    <a href="tel:+390445162001">0445 162 0010</a>
+    <div class="social-links">
+      <a href="https://golden-sushi.com/facebook" class="social-link" aria-label="Facebook">FB</a>
+      <a href="https://golden-sushi.com/instagram" class="social-link" aria-label="Instagram">IG</a>
+    </div>
+  </div>
+  <div class="contatti-block reveal">
+    <span class="s-label">Orari</span>
+    <h3>Siamo Aperti</h3>
+    <ul class="orari-list">
+      <li><span>Lun – Ven</span><span>12:00 – 14:30</span></li>
+      <li><span>Lun – Ven</span><span>18:30 – 22:30</span></li>
+      <li><span>Sabato</span><span>12:00 – 23:00</span></li>
+      <li><span>Domenica</span><span>12:00 – 22:30</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ─── MAP ─── -->
+<div class="map-section">
+  <iframe
+    src="https://maps.google.com/maps?q=Via%20Molise%2C%207%2C%2036015%20Schio%20VI&t=m&z=15&output=embed&iwloc=near"
+    allowfullscreen loading="lazy" title="Mappa Golden Sushi">
+  </iframe>
+  <div class="map-overlay"></div>
+  <div class="map-overlay-top"></div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo">Golden Sushi</div>
+    <p>© 2025 Golden Sushi Schio · Via Molise, 7 · Schio (VI)</p>
+  </div>
+  <nav aria-label="Footer links" style="display:flex;gap:32px;list-style:none">
+    <a href="#about" style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--ash)'">Il Locale</a>
+    <a href="#menu"  style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--ash)'">Menù</a>
+    <a href="#contatti" style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--ash)'">Contatti</a>
+  </nav>
+  <a href="#prenota" class="btn-gold" style="font-size:.7rem;padding:12px 26px" onclick="document.getElementById('prenota').scrollIntoView({behavior:'smooth'});return false;">Prenota Ora</a>
+</footer>
+
+<!-- ─── TAKEAWAY APP MODAL ─── -->
+<div class="app-modal-backdrop" id="appModal" onclick="handleBackdropClick(event)">
+  <div class="app-modal">
+    <!-- Close bar -->
+    <div class="modal-topbar">
+      <span class="modal-topbar-logo">Golden Sushi</span>
+      <button class="modal-close" onclick="closeApp()" aria-label="Chiudi">✕</button>
+    </div>
+
+    <!-- Scrollable app content -->
+    <div class="app-inner">
+      <div class="gs">
+        <h2 style="position:absolute;left:-9999px">Golden Sushi — Menu, Carrello & Prenotazione</h2>
+
+        <!-- HEADER -->
+        <div class="gs-header">
+          <svg class="logo-svg" viewBox="0 0 48 48" fill="none">
+            <ellipse cx="24" cy="38" rx="19" ry="7" fill="none" stroke="#C9A84C" stroke-width="1.3"/>
+            <ellipse cx="24" cy="31" rx="19" ry="7" fill="#141210" stroke="#C9A84C" stroke-width="1.3"/>
+            <ellipse cx="24" cy="24" rx="19" ry="7" fill="#141210" stroke="#C9A84C" stroke-width="1.3"/>
+            <ellipse cx="24" cy="17" rx="19" ry="7" fill="#141210" stroke="#C9A84C" stroke-width="1.3"/>
+          </svg>
+          <div class="logo-text">Golden Sushi</div>
+          <div class="logo-sub">Schio · Ordina Online</div>
+        </div>
+
+        <!-- TAB BAR -->
+        <div class="tab-bar">
+          <button class="tab-btn active" id="tabMenu" onclick="switchTab('menu')">
+            <i class="ti ti-tools-kitchen-2" style="font-size:14px"></i> Menu
+          </button>
+          <button class="tab-btn" id="tabCart" onclick="switchTab('cart')">
+            <i class="ti ti-shopping-cart" style="font-size:14px"></i> Carrello
+            <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+          </button>
+        </div>
+
+        <!-- ===== MENU PAGE ===== -->
+        <div id="pageMenu" class="page active">
+          <div class="nav-outer">
+            <div class="nav-scroll">
+              <button class="nav-btn active" onclick="filterCat(this,'all')">Tutti</button>
+              <button class="nav-btn" onclick="filterCat(this,'antipasti')">Antipasti</button>
+              <button class="nav-btn" onclick="filterCat(this,'bao')">Dim Sum & Bao</button>
+              <button class="nav-btn" onclick="filterCat(this,'poke')">Insalate & Poke</button>
+              <button class="nav-btn" onclick="filterCat(this,'tartare')">Tartare</button>
+              <button class="nav-btn" onclick="filterCat(this,'temaki')">Temaki</button>
+              <button class="nav-btn" onclick="filterCat(this,'onigiri')">Onigiri</button>
+              <button class="nav-btn" onclick="filterCat(this,'oshi')">Oshizushi</button>
+              <button class="nav-btn" onclick="filterCat(this,'hosomaki')">Hosomaki</button>
+              <button class="nav-btn" onclick="filterCat(this,'uramaki')">Uramaki</button>
+              <button class="nav-btn" onclick="filterCat(this,'futomaki')">Futomaki</button>
+              <button class="nav-btn" onclick="filterCat(this,'nigiri')">Nigiri</button>
+              <button class="nav-btn" onclick="filterCat(this,'gunkan')">Gunkan</button>
+              <button class="nav-btn" onclick="filterCat(this,'sashimi')">Sashimi</button>
+              <button class="nav-btn" onclick="filterCat(this,'ramen')">Zuppe & Ramen</button>
+              <button class="nav-btn" onclick="filterCat(this,'caldi')">Piatti Caldi</button>
+              <button class="nav-btn" onclick="filterCat(this,'fritture')">Fritture</button>
+            </div>
+          </div>
+          <div id="menuBody"></div>
+          <div class="bottom-bar" id="bottomBar" style="display:none">
+            <div class="bar-info">
+              <span id="barCount" style="font-weight:500;color:#c9a84c">0</span> articoli ·
+              <span class="bar-total" id="barTotal">0,00€</span>
+            </div>
+            <button class="checkout-btn" onclick="switchTab('cart')">
+              <i class="ti ti-shopping-cart" style="font-size:13px"></i> Carrello
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== CART PAGE ===== -->
+        <div id="pageCart" class="page">
+          <div class="sub-page">
+            <div class="sub-title">Carrello</div>
+            <div id="cartBody"></div>
+            <div id="cartWrap" style="display:none">
+              <div class="summary-box">
+                <div class="sum-row"><span>Subtotale</span><span id="sumSub">0,00€</span></div>
+                <div class="sum-row"><span>Consegna</span><span id="sumDel">Gratis</span></div>
+                <div class="sum-row total"><span>Totale</span><span id="sumTotal">0,00€</span></div>
+              </div>
+              <div class="sect-label" style="margin-top:1rem">Modalità</div>
+              <div class="del-row">
+                <button class="d-btn sel" id="dA" onclick="setDel('asporto')">
+                  <i class="ti ti-walk" style="font-size:14px;display:block;margin-bottom:2px"></i>Asporto
+                </button>
+                <button class="d-btn" id="dC" onclick="setDel('consegna')">
+                  <i class="ti ti-bike" style="font-size:14px;display:block;margin-bottom:2px"></i>Consegna
+                </button>
+              </div>
+              <div id="addrSection" style="display:none;margin-top:.7rem">
+                <div class="sect-label">Indirizzo di consegna</div>
+                <input class="field-input" id="addrInput" placeholder="Es. Via Roma 12, Schio…" autocomplete="off" oninput="onAddrInput()"/>
+                <div class="suggest-box" id="suggestBox"></div>
+                <div class="addr-status" id="addrStatus"></div>
+                <div style="font-size:.65rem;color:#857a60;margin-top:5px;line-height:1.5">
+                  <i class="ti ti-info-circle" style="font-size:11px;vertical-align:-1px"></i>
+                  Gratis entro 10 km · 10,00€ oltre 10 km
+                </div>
+              </div>
+              <div class="sect-label">Note per la cucina</div>
+              <textarea class="field-input" id="noteInput" rows="2" placeholder="Allergie, richieste speciali…" oninput="buildOrderPreview()" style="resize:none"></textarea>
+              <div class="preview-box" id="previewBox" style="display:none">
+                <div class="preview-label"><i class="ti ti-brand-whatsapp" style="font-size:13px"></i> Anteprima WhatsApp</div>
+                <div class="preview-msg" id="previewMsg"></div>
+              </div>
+              <button class="send-btn" id="orderBtn" onclick="sendOrder()" disabled>
+                <i class="ti ti-brand-whatsapp" style="font-size:17px"></i> Invia ordine su WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- .gs -->
+    </div><!-- .app-inner -->
+  </div><!-- .app-modal -->
+</div><!-- .app-modal-backdrop -->
+
+<script>
+  /* ── SITE SCRIPTS ── */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 90);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ── MODAL ── */
+  function openApp() {
+    document.getElementById('appModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (!appReady) { initApp(); appReady = true; }
+  }
+  function closeApp() {
+    document.getElementById('appModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function handleBackdropClick(e) {
+    if (e.target === document.getElementById('appModal')) closeApp();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeApp(); });
+
+  /* ── APP ── */
+  let appReady = false;
+  const PHONE = '393298498014';
+  const GMAPS_KEY = 'AIzaSyDBl02TghKQb0GX_XQXszpTUU4DJ-pkgiQ';
+  const SHOP_LNG = 11.3592, SHOP_LAT = 45.7146;
+  const FREE_KM = 10, FAR_FEE = 10;
+  const LUNCH_SLOTS  = ['12:00','12:15','12:30','12:45','13:00','13:15','13:30','13:45','14:00','14:15','14:30','14:45'];
+  const DINNER_SLOTS = ['18:30','18:45','19:00','19:15','19:30','19:45','20:00','20:15','20:30','20:45','21:00','21:15','21:30','21:45','22:00','22:15','22:30'];
+
+  const MENU = [
+    // ── ANTIPASTI ──
+    {cat:'antipasti',num:'1',name:'Edamame',price:5,emoji:'🫘',desc:'Fagiolini di soia con sale'},
+    {cat:'antipasti',num:'2',name:'Tentacoli con patate',price:8,emoji:'🐙',desc:'Tentacoli, patate'},
+    {cat:'antipasti',num:'3',name:'Alici marinate',price:7,emoji:'🐟',desc:'Alici marinate'},
+    {cat:'antipasti',num:'4',name:'Salmone marinato',price:4,emoji:'🍣',desc:'Salmone marinato'},
+    {cat:'antipasti',num:'5',name:'Sake su',price:6,emoji:'🍣',desc:'Salmone crudo con alghe giapponesi e aceto di riso'},
+    {cat:'antipasti',num:'6',name:'Tacos sake',price:5,emoji:'🌮',desc:'Sfoglia di pasta fritta, tartare di salmone, salsa teriyaki'},
+    {cat:'antipasti',num:'7',name:'Tacos maguro',price:5,emoji:'🌮',desc:'Sfoglia di pasta fritta, tartare di tonno, salsa teriyaki'},
+    {cat:'antipasti',num:'8',name:'Insalata di mare',price:8,emoji:'🥗',desc:'Insalata mista, gamberi, polipo, surimi, seppie e salsa insalata'},
+    {cat:'antipasti',num:'9',name:'Polpo rucola',price:8,emoji:'🐙',desc:'Polipo, rucola, mais, salsa insalata'},
+    {cat:'antipasti',num:'10',name:'Goma wakame',price:5,emoji:'🌿',desc:'Alghe verdi giapponesi'},
+    {cat:'antipasti',num:'11',name:'Wakamesu',price:5,emoji:'🌿',desc:'Alghe in aceto di riso'},
+    {cat:'antipasti',num:'12',name:'Tofu',price:3,emoji:'🫙',desc:'Tofu, salsa insalata'},
+    {cat:'antipasti',num:'13',name:'Nuvole di dragon',price:4,emoji:'☁️',desc:'Nuvole di dragon'},
+    {cat:'antipasti',num:'14',name:'Pringles philadelphia',price:5,emoji:'🥜',desc:'Pringles paprika al philadelphia e granelli pistacchio'},
+    {cat:'antipasti',num:'15',name:'Pringles maguro',price:5,emoji:'🥜',desc:'Pringles paprika al tonno pinne gialle, mayo, tabasco, tobiko e pistacchio'},
+    {cat:'antipasti',num:'16',name:'Pringles sake',price:5,emoji:'🥜',desc:'Pringles paprika al salmone, mayo, tabasco, tobiko e pistacchio'},
+    // ── DIM SUM E BAO ──
+    {cat:'bao',num:'17',name:'Shao mai (4 pz)',price:6,emoji:'🥟',desc:'Ravioli di gamberi, carne di suino e piselli'},
+    {cat:'bao',num:'—',name:'Ravioli di merluzzo (4 pz)',price:8,emoji:'🥟',desc:'Sfoglia al zafferano con filetto di merluzzo'},
+    {cat:'bao',num:'18',name:'Ravioli di gamberi (4 pz)',price:7,emoji:'🥟',desc:'Ravioli di gamberi al vapore'},
+    {cat:'bao',num:'19',name:'Ravioli di calamaro (4 pz)',price:8,emoji:'🥟',desc:'Sfoglia al nero di seppia con calamaro e castagna d\'acqua'},
+    {cat:'bao',num:'20',name:'Ravioli di manzo (4 pz)',price:7,emoji:'🥟',desc:'Sfoglia al barbabietola, manzo'},
+    {cat:'bao',num:'21',name:'Ravioli di verdure (4 pz)',price:4.5,emoji:'🥟',desc:'Sfoglia al spinaci, carote, cavolo, funghi, spaghetti di soia'},
+    {cat:'bao',num:'22',name:'Ravioli di carne (4 pz)',price:5,emoji:'🥟',desc:'Sfoglia, suino, cavolo, cipollotto, zenzero'},
+    {cat:'bao',num:'23',name:'Bao black (2 pz)',price:6,emoji:'🥷',desc:'Bao ripieno crema pasticcera all\'uovo salato'},
+    {cat:'bao',num:'24',name:'Bao crema (3 pz)',price:4,emoji:'🥐',desc:'Pane alla crema uova'},
+    {cat:'bao',num:'25',name:'Bao (1 pz)',price:4,emoji:'🫓',desc:'Pane bianco al vapore'},
+    {cat:'bao',num:'26',name:'Bao carne (1 pz)',price:3.5,emoji:'🥟',desc:'Pane al vapore, suino, cavolo, cipollotto, zenzero'},
+    {cat:'bao',num:'27',name:'Bao eby (1 pz)',price:6,emoji:'🦐',desc:'Pane al vapore, gambero fritto, insalata mista, salsa agro piccante'},
+    {cat:'bao',num:'29',name:'Bao chicken (1 pz)',price:5,emoji:'🍗',desc:'Pane al vapore, pollo fritto, insalata mista, salsa teriyaki, maionese'},
+    // ── INSALATE E POKE ──
+    {cat:'poke',num:'30',name:'Involtini salmone (4 pz)',price:5,emoji:'🥗',desc:'Cetrioli, insalata mista, fette di salmone, salsa ponzu e sesamo'},
+    {cat:'poke',num:'31',name:'Involtini mango (4 pz)',price:5,emoji:'🥭',desc:'Mango, insalata mista, cetrioli, fette di salmone, salsa di mango'},
+    {cat:'poke',num:'32',name:'Insalata seafood',price:8,emoji:'🦞',desc:'Insalata mista, tartare di salmone, gamberi, avocado, mais, philadelphia, tobiko'},
+    {cat:'poke',num:'33',name:'Insalata di granchio',price:8,emoji:'🦀',desc:'Insalata mista, surimi di granchio, avocado, cetriolo, mais e salsa insalata'},
+    {cat:'poke',num:'34',name:'Insalata fish',price:8,emoji:'🐟',desc:'Insalata mista, tartare di tonno pinne gialla, salmone, mango, avocado, cetriolo'},
+    {cat:'poke',num:'35',name:'Insalata chicken',price:8,emoji:'🍗',desc:'Insalata mista, pollo alla piastra e salsa insalata'},
+    {cat:'poke',num:'36',name:'Poke mix',price:12,emoji:'🍚',desc:'Riso, salmone, mais, avocado, cetriolo, philadelphia'},
+    {cat:'poke',num:'37',name:'Poke vegan',price:11,emoji:'🌱',desc:'Riso, mango, avocado, cetriolo, wakame'},
+    // ── TARTARE ──
+    {cat:'tartare',num:'38',name:'Tuna tartare',price:10,emoji:'🐟',desc:'Tartare di tonno pinne gialle, kataifi, salsa ponzu'},
+    {cat:'tartare',num:'39',name:'Tartare mix 3 cucchiai',price:10,emoji:'🥄',desc:'Tartare mix di salmone, gambero cotto, branzino, avocado, tobiko, salsa ponzu'},
+    {cat:'tartare',num:'40',name:'Tartare salmon ritz',price:12,emoji:'🍣',desc:'Tartare di salmone, avocado, philadelphia, salsa teriyaki'},
+    {cat:'tartare',num:'41',name:'Salmon tartare',price:10,emoji:'🍣',desc:'Tartare di salmone, kataifi, salsa ponzu'},
+    {cat:'tartare',num:'42',name:'Tartare amaebi',price:12,emoji:'🦐',desc:'Gamberi crudi, burrata, pepe nero, olio ex. d\'oliva'},
+    {cat:'tartare',num:'43',name:'Tartare amaebi tartufo',price:12,emoji:'🦐',desc:'Gamberi crudi, crema di tartufo, olio menta'},
+    {cat:'tartare',num:'44',name:'Tartare amaebi plus',price:12,emoji:'🦐',desc:'Gamberi crudi, tobiko, salsa ponzu'},
+    // ── TEMAKI ──
+    {cat:'temaki',num:'45',name:'Temaki sake (1 pz)',price:4,emoji:'🍙',desc:'Riso, salmone, avocado, insalata'},
+    {cat:'temaki',num:'46',name:'Temaki california (1 pz)',price:4,emoji:'🍙',desc:'Riso, tartare surimi di granchio, tobiko, insalata, avocado'},
+    {cat:'temaki',num:'47',name:'Temaki maguro (1 pz)',price:5,emoji:'🍙',desc:'Riso, tonno, avocado, insalata'},
+    {cat:'temaki',num:'48',name:'Temaki spicy sake (1 pz)',price:5,emoji:'🌶️',desc:'Riso, tartare di salmone, cetriolo, insalata, tabasco, tobiko, erba cipollina'},
+    {cat:'temaki',num:'49',name:'Temaki ebiten (1 pz)',price:5,emoji:'🦐',desc:'Riso, gamberi in tempura, kataifi, insalata, salsa teriyaki'},
+    {cat:'temaki',num:'50',name:'Temaki spicy maguro (1 pz)',price:5,emoji:'🌶️',desc:'Riso, tartare di tonno pinna gialla, cetriolo, insalata, tabasco, tobiko'},
+    {cat:'temaki',num:'51',name:'Temaki maguro mango (1 pz)',price:5,emoji:'🥭',desc:'Riso, tonno pinna gialla, insalata, mango'},
+    {cat:'temaki',num:'52',name:'Temaki mango royal (1 pz)',price:5,emoji:'🥭',desc:'Riso, mango, insalata, philadelphia, mandorle'},
+    {cat:'temaki',num:'53',name:'Temaki california (1 pz)',price:5,emoji:'🍙',desc:'Riso, tartare surimi di granchio, tobiko, insalata, avocado'},
+    {cat:'temaki',num:'54',name:'Temaki zucca (1 pz)',price:5,emoji:'🎃',desc:'Riso, zucca fritta, philadelphia, insalata, kataifi, salsa teriyaki'},
+    // Temaki Speciali
+    {cat:'temaki',num:'55',name:'Temaki pink eby (1 pz)',price:7,emoji:'🌸',desc:'Riso, sfoglia di soia, gamberi in tempura, tartare di salmone, kataify, salsa teriyaki'},
+    {cat:'temaki',num:'56',name:'Temaki pink spicy salmon (1 pz)',price:6,emoji:'🌸',desc:'Riso, sfoglia di soia, tartare di salmone, insalata, cetriolo, tobiko, mandorle, tabasco'},
+    {cat:'temaki',num:'57',name:'Temaki pink spicy tuna (1 pz)',price:6,emoji:'🌸',desc:'Riso, sfoglia di soia, tartare di tonno pinna gialla, insalata, cetriolo, tobiko, mandorle'},
+    {cat:'temaki',num:'58',name:'Temaki pink zucca (1 pz)',price:6,emoji:'🌸',desc:'Riso, sfoglia di soia, zucca fritta, surimi di granchio, tobiko, insalata, salsa zafferano'},
+    // ── ONIGIRI ──
+    {cat:'onigiri',num:'59',name:'Onigiri ebiten (1 pz)',price:5,emoji:'🍙',desc:'Polpetta di riso con gambero in tempura, maionese e salsa teriyaki'},
+    {cat:'onigiri',num:'60',name:'Onigiri spicy salmone (1 pz)',price:5,emoji:'🌶️',desc:'Polpetta di riso con tartare di salmone, tabasco, erba cipollina, tobiko'},
+    {cat:'onigiri',num:'61',name:'Onigiri spicy tuna (1 pz)',price:5,emoji:'🌶️',desc:'Polpetta di riso con tartare di tonno pinna gialla, tabasco, erba cipollina, tobiko'},
+    {cat:'onigiri',num:'62',name:'Onigiri miura (1 pz)',price:5,emoji:'🍙',desc:'Polpetta di riso con salmone cotto, philadelphia, salsa teriyaki'},
+    // ── OSHIZUSHI ──
+    {cat:'oshi',num:'63',name:'Oshi tuna (4 pz)',price:8,emoji:'🍱',desc:'Un strato di riso con tartare di tonno pinna gialla, zest di lime, salsa teriyaki'},
+    {cat:'oshi',num:'64',name:'Oshi salmon (4 pz)',price:8,emoji:'🍱',desc:'Doppio strato di riso con tartare di salmone, avocado, philadelphia, salsa teriyaki'},
+    {cat:'oshi',num:'65',name:'Oshi mango (4 pz)',price:8,emoji:'🥭',desc:'Doppio strato di riso con tartare di salmone, avocado, philadelphia, mango e salsa mango'},
+    {cat:'oshi',num:'66',name:'Oshi mandorle (4 pz)',price:8,emoji:'🌰',desc:'Doppio strato di riso con tartare di salmone, avocado, philadelphia, mandorle e salsa teriyaki'},
+    {cat:'oshi',num:'67',name:'Black saudade (4 pz)',price:8,emoji:'⚫',desc:'Un strato di riso venere con tartare di salmone, philadelphia, kataifi, salsa teriyaki'},
+    // ── HOSOMAKI ──
+    {cat:'hosomaki',num:'68',name:'Hosomaki sake (6 pz)',price:5,emoji:'🌀',desc:'Riso avvolto con salmone'},
+    {cat:'hosomaki',num:'69',name:'Hosomaki kappa (6 pz)',price:4,emoji:'🌀',desc:'Riso avvolto con cetriolo'},
+    {cat:'hosomaki',num:'70',name:'Hosomaki eby (6 pz)',price:5,emoji:'🦐',desc:'Riso avvolto con gamberi cotti'},
+    {cat:'hosomaki',num:'71',name:'Hosomaki maguro (6 pz)',price:5,emoji:'🌀',desc:'Riso avvolto con tonno pinne gialla'},
+    {cat:'hosomaki',num:'72',name:'Hosomaki california (6 pz)',price:5,emoji:'🌀',desc:'Riso avvolto con surimi di granchio'},
+    {cat:'hosomaki',num:'73',name:'Hosomaki suzuki (6 pz)',price:5,emoji:'🌀',desc:'Riso avvolto con branzino'},
+    {cat:'hosomaki',num:'74',name:'Hosomaki avocado (6 pz)',price:4,emoji:'🥑',desc:'Riso avvolto con avocado'},
+    {cat:'hosomaki',num:'75',name:'Hoso sumi red (6 pz)',price:7,emoji:'🌹',desc:'Riso avvolto con surimi in tempura esterno con philadelphia e fragola'},
+    {cat:'hosomaki',num:'76',name:'Hoso kataify tempura (6 pz)',price:7,emoji:'🌀',desc:'Riso avvolto con salmone in tempura esterno con philadelphia, kataifi e salsa teriyaki'},
+    {cat:'hosomaki',num:'77',name:'Hoso mango tempura (6 pz)',price:7,emoji:'🥭',desc:'Riso avvolto con salmone in tempura esterno philadelphia, mango e salsa mango'},
+    {cat:'hosomaki',num:'78',name:'Hosomaki fritto (6 pz)',price:7,emoji:'🌀',desc:'Riso avvolto con salmone in tempura, philadelphia e salsa teriyaki'},
+    {cat:'hosomaki',num:'79',name:'Hoso sake red (6 pz)',price:7,emoji:'🌹',desc:'Riso avvolto con salmone in tempura esterno con philadelphia e fragola'},
+    {cat:'hosomaki',num:'80',name:'Hoso eby tempura (6 pz)',price:7,emoji:'🦐',desc:'Riso avvolto con gamberi cotti in tempura esterno con salsa teriyaki'},
+    // Hosomaki Special
+    {cat:'hosomaki',num:'81',name:'Hoso pink eby (6 pz)',price:6,emoji:'🌸',desc:'Sfoglia di soia avvolto con riso, gamberi in tempura e philadelphia'},
+    {cat:'hosomaki',num:'82',name:'Hoso pink papaya (6 pz)',price:5,emoji:'🌸',desc:'Sfoglia di soia avvolto con riso e papaya'},
+    {cat:'hosomaki',num:'83',name:'Hoso pink mango (6 pz)',price:5,emoji:'🌸',desc:'Sfoglia di soia avvolto con riso e mango'},
+    {cat:'hosomaki',num:'84',name:'Hoso pink avocado (6 pz)',price:5,emoji:'🌸',desc:'Sfoglia di soia avvolto con riso e avocado'},
+    {cat:'hosomaki',num:'85',name:'Hoso pink sake (6 pz)',price:6,emoji:'🌸',desc:'Sfoglia di soia avvolto con riso e salmone'},
+    // ── URAMAKI ──
+    {cat:'uramaki',num:'86',name:'Uramaki california (8 pz)',price:8,emoji:'🍣',desc:'Riso, surimi di granchio, avocado, cetriolo, tobiko, maionese'},
+    {cat:'uramaki',num:'87',name:'Uramaki salmone avocado (8 pz)',price:8,emoji:'🍣',desc:'Riso, salmone, avocado'},
+    {cat:'uramaki',num:'88',name:'Uramaki just vegan (8 pz)',price:8,emoji:'🌱',desc:'Riso, avocado, mango, philadelphia, kataifi'},
+    {cat:'uramaki',num:'89',name:'Uramaki tonno avocado (8 pz)',price:9,emoji:'🐟',desc:'Riso, tonno pinna gialla, avocado'},
+    {cat:'uramaki',num:'90',name:'Uramaki miura (8 pz)',price:8,emoji:'🍣',desc:'Riso, salmone cotto, avocado, philadelphia, salsa teriyaki'},
+    {cat:'uramaki',num:'91',name:'Uramaki rainbow (8 pz)',price:9.5,emoji:'🌈',desc:'Riso, salmone, avocado e pesce misto esterno'},
+    {cat:'uramaki',num:'92',name:'Uramaki tobiko (8 pz)',price:9,emoji:'🍣',desc:'Riso, gamberi in tempura, tobiko esterno'},
+    {cat:'uramaki',num:'93',name:'Amandor roll (8 pz)',price:9,emoji:'🌰',desc:'Riso, salmone, avocado, con philadelphia e mandorle esterno'},
+    {cat:'uramaki',num:'94',name:'Gueen roll (8 pz)',price:9,emoji:'👑',desc:'Riso, salmone, mango, con fette di salmone e salsa teriyaki esterno'},
+    {cat:'uramaki',num:'95',name:'Uramaki chicken (8 pz)',price:8,emoji:'🍗',desc:'Riso, pollo fritto, philadelphia, kataifi, salsa teriyaki'},
+    {cat:'uramaki',num:'96',name:'Rock\'n roll (8 pz)',price:9,emoji:'🎸',desc:'Riso, avocado, philadelphia, tartare di salmone, avocado, mandorle'},
+    {cat:'uramaki',num:'97',name:'Uramaki spicy tuna (8 pz)',price:9,emoji:'🌶️',desc:'Riso, tartare di tonno pinna gialla, cetriolo, tabasco, tobiko, erba cipollina'},
+    {cat:'uramaki',num:'98',name:'Uramaki ebiten (8 pz)',price:9,emoji:'🦐',desc:'Riso, gamberi in tempura, scaglie di tempura, maionese e salsa teriyaki'},
+    {cat:'uramaki',num:'99',name:'Uramaki philadelphia (8 pz)',price:9,emoji:'🍣',desc:'Riso, salmone, philadelphia'},
+    {cat:'uramaki',num:'100',name:'Uramaki spicy salmon (8 pz)',price:9,emoji:'🌶️',desc:'Riso, tartare di salmone, cetriolo, tabasco, tobiko, erba cipollina'},
+    {cat:'uramaki',num:'101',name:'Mango roll (8 pz)',price:9,emoji:'🥭',desc:'Riso, salmone, philadelphia, mango'},
+    {cat:'uramaki',num:'102',name:'Uramaki white eby (8 pz)',price:9,emoji:'🦐',desc:'Riso, gamberi in tempura, salsa teriyaki'},
+    {cat:'uramaki',num:'103',name:'Uramaki white sakè (8 pz)',price:9,emoji:'🍣',desc:'Riso, salmone, philadelphia'},
+    // Uramaki Speciali
+    {cat:'uramaki',num:'104',name:'Uramaki malibu (8 pz)',price:12,emoji:'⭐',desc:'Riso, salmone, philadelphia, fragola, salsa zafferano'},
+    {cat:'uramaki',num:'105',name:'Uramaki sicilia (8 pz)',price:12,emoji:'⭐',desc:'Riso, salmone, avocado, gamberi rossi, philadelphia, mango'},
+    {cat:'uramaki',num:'106',name:'Uramaki uraneghitoro (8 pz)',price:12,emoji:'⭐',desc:'Riso, salmone, avocado, tobiko, tabasco, erba cipollina'},
+    {cat:'uramaki',num:'107',name:'Uramaki ebiten top (8 pz)',price:12,emoji:'⭐',desc:'Riso, gamberi in tempura, insalata, kataifi, salsa teriyaki'},
+    {cat:'uramaki',num:'108',name:'Uramaki amaebi (8 pz)',price:12,emoji:'🦐',desc:'Riso, salmone, avocado, philadelphia, gambero amaebi'},
+    {cat:'uramaki',num:'109',name:'Uramaki tata (8 pz)',price:12,emoji:'⭐',desc:'Riso, gamberi in tempura, salmone, philadelphia, scaglie di tempura'},
+    {cat:'uramaki',num:'110',name:'Uramaki tataki (8 pz)',price:12,emoji:'🔥',desc:'Riso, gamberi in tempura, philadelphia, esterno tonno scottato, scaglie di tempura'},
+    {cat:'uramaki',num:'111',name:'Fever (8 pz)',price:12,emoji:'🔥',desc:'Riso, salmone, avocado, philadelphia, kataifi, salsa teriyaki'},
+    {cat:'uramaki',num:'112',name:'Mango chili (8 pz)',price:12,emoji:'🌶️',desc:'Riso, salmone, mango, esterno con fette di salmone scottato, salsa spicy e teriyaki'},
+    {cat:'uramaki',num:'113',name:'Dragon roll (8 pz)',price:12,emoji:'🐉',desc:'Riso, gamberi in tempura, philadelphia, avocado, surimi di granchio, tobiko, maionese'},
+    {cat:'uramaki',num:'114',name:'Uramaki unagi (8 pz)',price:12,emoji:'🐍',desc:'Riso, anguilla, avocado, philadelphia e salsa teriyaki'},
+    {cat:'uramaki',num:'115',name:'Crispy salmon roll (8 pz)',price:12,emoji:'⭐',desc:'Riso, salmone, avocado, cipolla fritta, salsa cheese e salsa teriyaki'},
+    {cat:'uramaki',num:'116',name:'Salmon style (8 pz)',price:12,emoji:'🔥',desc:'Riso, salmone fritto, philadelphia, salmone scottato esterno e salsa guacamole'},
+    {cat:'uramaki',num:'117',name:'Amaebi roll (8 pz)',price:12,emoji:'🦐',desc:'Riso, salmone, philadelphia, ricoperto con gambero rosso, fette tartufo nero'},
+    {cat:'uramaki',num:'118',name:'Samba roll (8 pz)',price:12,emoji:'⭐',desc:'Riso, salmone, ricoperto con salmone scottato, philadelphia e salsa tartufata'},
+    {cat:'uramaki',num:'119',name:'Crispy eby roll (8 pz)',price:10,emoji:'🦐',desc:'Riso, gamberi in tempura, cipolla fritta, salsa cheese e salsa teriyaki'},
+    {cat:'uramaki',num:'120',name:'Green roll (8 pz)',price:12,emoji:'💚',desc:'Riso, salmone, avocado, philadelphia, scaglie di tempura e salsa teriyaki'},
+    {cat:'uramaki',num:'121',name:'Crispy cali roll (8 pz)',price:10,emoji:'🦀',desc:'Riso, surimi di granchio, avocado, cipolla fritta, salsa cheese e salsa teriyaki'},
+    {cat:'uramaki',num:'122',name:'Uramaki spicy eby (8 pz)',price:12,emoji:'🌶️',desc:'Riso, gamberi in tempura, tartare di salmone, tabasco, tobiko'},
+    {cat:'uramaki',num:'123',name:'Suzuki ten (8 pz)',price:12,emoji:'⭐',desc:'Riso, salmone in tempura, tobiko e maionese'},
+    {cat:'uramaki',num:'124',name:'Salmon tartufo (8 pz)',price:12,emoji:'🍄',desc:'Riso, salmone, avocado, philadelphia, salsa tartufata'},
+    {cat:'uramaki',num:'125',name:'Uramaki onion (8 pz)',price:10,emoji:'🧅',desc:'Riso, salmone cotto, philadelphia, avocado, esterno salmone, cipolla fritta'},
+    {cat:'uramaki',num:'126',name:'Uramaki soffiato (8 pz)',price:10,emoji:'⭐',desc:'Riso, salmone cotto, philadelphia, avocado, riso soffiato, salsa teriyaki'},
+    {cat:'uramaki',num:'127',name:'Salmon mandorle (8 pz)',price:10,emoji:'🌰',desc:'Riso, salmone cotto, avocado, philadelphia, mandorle, salsa teriyaki'},
+    {cat:'uramaki',num:'128',name:'Papaya roll (8 pz)',price:10,emoji:'🧡',desc:'Riso, papaya, philadelphia, salsa teriyaki'},
+    {cat:'uramaki',num:'129',name:'Uramaki red (8 pz)',price:12,emoji:'🔴',desc:'Riso, gamberi cotti, papaya, avocado, philadelphia, tobiko, salsa mango'},
+    {cat:'uramaki',num:'130',name:'Uramaki rainbow special (8 pz)',price:12,emoji:'🌈',desc:'Riso, gamberi in tempura, philadelphia, esterno pesce misto e salsa rucola'},
+    // Black / Venus
+    {cat:'uramaki',num:'131',name:'Black eby (8 pz)',price:12,emoji:'⚫',desc:'Riso venere, gamberi in tempura, tartare di salmone, philadelphia, granelli pistacchio'},
+    {cat:'uramaki',num:'132',name:'Black mandorle (8 pz)',price:12,emoji:'⚫',desc:'Riso venere, gamberi in tempura, tartare di salmone, philadelphia, mandorle, salsa zafferano'},
+    {cat:'uramaki',num:'133',name:'Black miura (8 pz)',price:12,emoji:'⚫',desc:'Riso venere, salmone in tempura, tartare di tonno pinne gialle, philadelphia, kataifi, salsa rucola'},
+    {cat:'uramaki',num:'134',name:'Black special (8 pz)',price:12,emoji:'⚫',desc:'Riso venere, gamberi cotti, avocado, philadelphia, scaglie di tempura, granelli pistacchio'},
+    {cat:'uramaki',num:'135',name:'Black tiger (8 pz)',price:12,emoji:'🐯',desc:'Riso venere, gamberi in tempura, surimi, tobiko, maionese e salsa guacamole'},
+    {cat:'uramaki',num:'136',name:'Graten kataify (4 pz)',price:6,emoji:'🔥',desc:'Roll in tempura, salmone cotto, avocado, philadelphia, kataify, salsa teriyaki'},
+    {cat:'uramaki',num:'137',name:'Graten pistacchio (4 pz)',price:6,emoji:'🌰',desc:'Roll in tempura, salmone cotto, avocado, granelli di pistacchio, salsa mango'},
+    {cat:'uramaki',num:'138',name:'Graten sake (4 pz)',price:6,emoji:'🔥',desc:'Roll in tempura, salmone cotto, avocado, philadelphia, tartare di salmone, tabasco, tobiko'},
+    {cat:'uramaki',num:'139',name:'Graten mango (4 pz)',price:6,emoji:'🥭',desc:'Roll in tempura, salmone cotto, avocado, philadelphia, mango e salsa mango'},
+    {cat:'uramaki',num:'140',name:'Uramaki flambé (8 pz)',price:12,emoji:'🔥',desc:'Riso, surimi di granchio in tempura, avocado, philadelphia, salmone scottato, cipolla fritta'},
+    // ── FUTOMAKI ──
+    {cat:'futomaki',num:'141',name:'Futomaki sake (4 pz)',price:6,emoji:'🌀',desc:'Riso avvolto con salmone, surimi di granchio, avocado'},
+    {cat:'futomaki',num:'142',name:'Futomaki california (4 pz)',price:7,emoji:'🌀',desc:'Riso avvolto con surimi di granchio, tobiko, maionese, avocado, cetriolo'},
+    {cat:'futomaki',num:'143',name:'Futomaki maguro (4 pz)',price:7,emoji:'🐟',desc:'Riso avvolto con tonno pinne gialle, avocado, philadelphia'},
+    {cat:'futomaki',num:'144',name:'Futomaki eby (4 pz)',price:6,emoji:'🦐',desc:'Riso avvolto con gamberi in tempura, tobiko, maionese'},
+    {cat:'futomaki',num:'145',name:'Futo pink sake (4 pz)',price:8,emoji:'🌸',desc:'Sfoglia di soia avvolto con riso, salmone, surimi di granchio, avocado'},
+    {cat:'futomaki',num:'146',name:'Futo pink vegan (4 pz)',price:7,emoji:'🌱',desc:'Sfoglia di soia avvolto con riso, avocado, cetriolo, mango'},
+    {cat:'futomaki',num:'147',name:'Futomaki fritto (4 pz)',price:8,emoji:'🔥',desc:'Roll in tempura con gamberi in tempura, avocado, philadelphia, salsa teriyaki'},
+    // ── NIGIRI ──
+    {cat:'nigiri',num:'148',name:'Nigiri special (4 pz)',price:6,emoji:'⭐',desc:'Riso, pesce misto scottato, mandorle, salsa teriyaki e salsa mango'},
+    {cat:'nigiri',num:'149',name:'Nigiri amaebi (2 pz)',price:4.5,emoji:'🦐',desc:'Gambero crudo'},
+    {cat:'nigiri',num:'150',name:'Nigiri sake (2 pz)',price:3,emoji:'🍣',desc:'Salmone'},
+    {cat:'nigiri',num:'151',name:'Nigiri suzuki (2 pz)',price:3,emoji:'🐟',desc:'Branzino'},
+    {cat:'nigiri',num:'152',name:'Nigiri maguro (2 pz)',price:3.5,emoji:'🐟',desc:'Tonno pinne gialle'},
+    {cat:'nigiri',num:'153',name:'Nigiri eby (2 pz)',price:3,emoji:'🦐',desc:'Gambero cotto'},
+    {cat:'nigiri',num:'154',name:'Nigiri branzino style (2 pz)',price:3.5,emoji:'🐟',desc:'Riso, branzino scottato, philadelphia, kataifi e salsa teriyaki'},
+    {cat:'nigiri',num:'155',name:'Nigiri salmon style (2 pz)',price:4,emoji:'🍣',desc:'Riso, salmone scottato, philadelphia, kataifi e salsa teriyaki'},
+    {cat:'nigiri',num:'156',name:'Nigiri maguro style (2 pz)',price:4,emoji:'🐟',desc:'Riso, tonno pinne gialle scottato, philadelphia, kataifi, salsa teriyaki'},
+    {cat:'nigiri',num:'157',name:'Nigiri salmone scottato (2 pz)',price:4,emoji:'🔥',desc:'Riso, salmone scottato, mandorle, salsa teriyaki e salsa mango'},
+    {cat:'nigiri',num:'158',name:'Nigiri maguro scottato (2 pz)',price:4,emoji:'🔥',desc:'Riso, tonno pinne gialle scottato, mandorle, salsa teriyaki e salsa mango'},
+    {cat:'nigiri',num:'159',name:'Nigiri branzino scottato (2 pz)',price:4,emoji:'🔥',desc:'Riso, branzino scottato, mandorle, salsa teriyaki e salsa mango'},
+    {cat:'nigiri',num:'160',name:'Nigiri anguilla (2 pz)',price:4,emoji:'🐠',desc:'Riso, anguilla, salsa teriyaki'},
+    {cat:'nigiri',num:'161',name:'Nigiri mix pesce misto (5 pz)',price:6,emoji:'🍣',desc:'Pesce misto'},
+    {cat:'nigiri',num:'162',name:'Nigiri avocado (2 pz)',price:3,emoji:'🥑',desc:'Avocado'},
+    {cat:'nigiri',num:'163',name:'Nigiri sake cheese (2 pz)',price:3.5,emoji:'🧀',desc:'Riso, salmone e sottilette scottato, granelli di pistacchio e salsa teriyaki'},
+    // ── GUNKAN ──
+    {cat:'gunkan',num:'164',name:'Gunkan ebi (2 pz)',price:3,emoji:'🦐',desc:'Riso, alghe, gamberi cotti, tobiko'},
+    {cat:'gunkan',num:'165',name:'Gunkan sake (2 pz)',price:3,emoji:'🍣',desc:'Riso, alghe, salmone'},
+    {cat:'gunkan',num:'166',name:'Gunkan spicy maguro (2 pz)',price:4,emoji:'🌶️',desc:'Riso, alghe, tartare tonno pinna gialla, tabasco, tobiko, erba cipollina'},
+    {cat:'gunkan',num:'167',name:'Gunkan tobiko (2 pz)',price:3.5,emoji:'🟠',desc:'Riso, alghe, tobiko'},
+    {cat:'gunkan',num:'168',name:'Gunkan maguro (2 pz)',price:4,emoji:'🐟',desc:'Riso, alghe, tonno pinna gialla'},
+    {cat:'gunkan',num:'169',name:'Gunkan spicy salmon (2 pz)',price:3.5,emoji:'🌶️',desc:'Riso, alghe, tartare di salmone, tabasco, tobiko, erba cipollina'},
+    // Gunkan Speciali
+    {cat:'gunkan',num:'170',name:'Gunkan quaglia (2 pz)',price:8,emoji:'🥚',desc:'Riso, salmone, uova di quaglia, salsa ponzu, tobiko, fette tartufo e olio'},
+    {cat:'gunkan',num:'171',name:'Gunkan eby salmon (2 pz)',price:5,emoji:'🦐',desc:'Riso, salmone, gamberi cotti, tobiko, salsa zafferano'},
+    {cat:'gunkan',num:'172',name:'Gunkan gio branzino (2 pz)',price:5,emoji:'🐟',desc:'Riso, branzino, philadelphia, kataifi, salsa teriyaki'},
+    {cat:'gunkan',num:'173',name:'Gunkan zucchine (2 pz)',price:5,emoji:'🥒',desc:'Riso, zucchine, surimi di granchio, gamberi cotti, tobiko e salsa zafferano'},
+    {cat:'gunkan',num:'174',name:'Gunkan philadelphia (2 pz)',price:5,emoji:'🧀',desc:'Riso, salmone, philadelphia'},
+    {cat:'gunkan',num:'175',name:'Gunka gio salmon (2 pz)',price:5,emoji:'🍣',desc:'Riso, salmone, kataifi, salsa teriyaki'},
+    {cat:'gunkan',num:'176',name:'Gunkan suzuki (2 pz)',price:5,emoji:'🐟',desc:'Riso, branzino, philadelphia, zest lime'},
+    {cat:'gunkan',num:'177',name:'Gunkan gio tuna (2 pz)',price:5,emoji:'🐟',desc:'Riso, tonno pinna gialla, kataify, salsa teriyaki'},
+    {cat:'gunkan',num:'178',name:'Gunkan white (2 pz)',price:3,emoji:'⚪',desc:'Riso, philadelphia, salsa teriyaki e sesamo'},
+    {cat:'gunkan',num:'179',name:'Gunkan black (2 pz)',price:3,emoji:'⚫',desc:'Riso venere, philadelphia, granelli di pistacchio, salsa teriyaki'},
+    {cat:'gunkan',num:'180',name:'Gunkan sake eby (2 pz)',price:5,emoji:'🔥',desc:'Salmone scottato, gamberi in tempura, tobiko, philadelphia, salsa teriyaki'},
+    // ── PIATTI SPECIALI / SASHIMI ──
+    {cat:'sashimi',num:'181',name:'Party 50',price:42,emoji:'🎉',desc:'Mix di sashimi, uramaki, hosomaki, temaki, nigiri, gunkan, futomaki'},
+    {cat:'sashimi',num:'182',name:'Party 70',price:60,emoji:'🎊',desc:'Mix di sashimi, uramaki, hosomaki, temaki, nigiri, gunkan, futomaki'},
+    {cat:'sashimi',num:'183',name:'Capesante kataify (4 pz)',price:8,emoji:'🐚',desc:'Capesante scottato, philadelphia, kataifi, salsa teriyaki'},
+    {cat:'sashimi',num:'184',name:'Cruditè di capesante (4 pz)',price:8,emoji:'🐚',desc:'Capesante, salmone, salsa ponzu e tobiko'},
+    {cat:'sashimi',num:'185',name:'Scampi fruit passion (4 pz)',price:12,emoji:'🦞',desc:'Scampo marinato in salsa passion fruit e tobiko'},
+    {cat:'sashimi',num:'186',name:'Sushi mix (12 pz)',price:10,emoji:'🍣',desc:'Mix di nigiri, uramaki, hosomaki'},
+    {cat:'sashimi',num:'187',name:'Sushi sashimi (15 pz)',price:12,emoji:'🍣',desc:'Nigiri di pesce misto, sashimi mix, uramaki, hosomaki'},
+    {cat:'sashimi',num:'188',name:'Sashimi mix (6 pz)',price:6,emoji:'🐟',desc:'Fette di salmone, tonno pinne gialle, branzino'},
+    {cat:'sashimi',num:'189',name:'Sashimi tonno (9 pz)',price:12,emoji:'🐟',desc:'Fette di tonno'},
+    {cat:'sashimi',num:'190',name:'Sashimi flambé (9 pz)',price:12,emoji:'🔥',desc:'Salmone scottato, salsa mango, granelli di pistacchio'},
+    {cat:'sashimi',num:'191',name:'Sashimi skin (9 pz)',price:12,emoji:'🍣',desc:'Salmone scottato, salsa ponzu, erba cipollina'},
+    {cat:'sashimi',num:'192',name:'Sashimi di gambero rosso (5 pz)',price:12,emoji:'🦐',desc:'Gambero rosso crudo'},
+    {cat:'sashimi',num:'193',name:'Sashimi branzino (9 pz)',price:12,emoji:'🐟',desc:'Fette di branzino'},
+    {cat:'sashimi',num:'194',name:'Sashimi salmone (9 pz)',price:12,emoji:'🍣',desc:'Fette di salmone'},
+    {cat:'sashimi',num:'195',name:'Sashimi degustazione (8 pz)',price:13,emoji:'⭐',desc:'Sashimi degustazione'},
+    // Carpacci / Chirashi
+    {cat:'sashimi',num:'196',name:'Carpaccio amaebi (5 pz)',price:12,emoji:'🦐',desc:'Gamberi rossi, salsa ponzu, fette tartufo'},
+    {cat:'sashimi',num:'197',name:'Carpaccio branzino (9 pz)',price:10,emoji:'🐟',desc:'Fette di branzino, salsa ponzu'},
+    {cat:'sashimi',num:'198',name:'Carpaccio mix (8 pz)',price:10,emoji:'🐟',desc:'Fette di pesce misto, salsa ponzu'},
+    {cat:'sashimi',num:'199',name:'Gran carpaccio',price:12,emoji:'⭐',desc:'Carpaccio mix scottato, salsa ponzu, erba cipollina, tartare di salmone e tonno'},
+    {cat:'sashimi',num:'200',name:'Tuna skin (8 pz)',price:10,emoji:'🔥',desc:'Tonno scottato, pistacchio, salsa teriyaki'},
+    {cat:'sashimi',num:'201',name:'Carpaccio passion fruit (8 pz)',price:10,emoji:'🌟',desc:'Salmone, mango, salsa di passion fruit'},
+    {cat:'sashimi',num:'202',name:'Chirashi mix',price:10,emoji:'🍚',desc:'Riso, pesce misto, salsa teriyaki'},
+    {cat:'sashimi',num:'203',name:'Chirashi sake',price:10,emoji:'🍣',desc:'Riso, salmone, salsa teriyaki'},
+    {cat:'sashimi',num:'204',name:'Chirashi maguro',price:10,emoji:'🐟',desc:'Riso, tonno pinne gialle, salsa teriyaki'},
+    {cat:'sashimi',num:'205',name:'Chirashi suzuki',price:10,emoji:'🐟',desc:'Riso, branzino, salsa teriyaki'},
+    // ── ZUPPE / RAMEN ──
+    {cat:'ramen',num:'206',name:'Zuppa di miso',price:5,emoji:'🍲',desc:'Zuppa di soia, alghe, tofu, erba cipollina'},
+    {cat:'ramen',num:'207',name:'Zuppa agro piccante',price:5,emoji:'🌶️',desc:'Tofu, uova, bambu, verdure miste'},
+    {cat:'ramen',num:'208',name:'Zuppa frutti di mare',price:6,emoji:'🦞',desc:'Zuppa di soia, alghe, salmone, branzino, tonno, gamberi, polipo e erba cipollina'},
+    {cat:'ramen',num:'209',name:'Manzo ramen',price:9,emoji:'🍜',desc:'Pasta giapponese in brodo con uovo sodo, manzo marinato, germogli di soia, carote, zucchine'},
+    {cat:'ramen',num:'210',name:'Seafood ramen',price:9,emoji:'🦞',desc:'Pasta giapponese in brodo con gamberi, calamari, surimi di granchio, germogli di soia, carote'},
+    {cat:'ramen',num:'211',name:'Zuppa thai',price:7,emoji:'🌿',desc:'Zuppa gamberi, latte di cocco, curry e erba cipollina'},
+    // ── SPAGHETTI / RISO / SECONDI ──
+    {cat:'caldi',num:'212',name:'Yakisoba eby',price:8,emoji:'🍝',desc:'Spaghetti di grano saraceno con gamberi, germogli di soia, cavolo, carote, zucchine e uovo'},
+    {cat:'caldi',num:'213',name:'Yakisoba vege',price:6,emoji:'🌱',desc:'Spaghetti di grano saraceno con germogli di soia, cavolo, carote, zucchine e uovo'},
+    {cat:'caldi',num:'214',name:'Udon vege',price:6,emoji:'🌱',desc:'Spaghetti di grano duro con germogli di soia, cavolo, carote, zucchine e uovo'},
+    {cat:'caldi',num:'215',name:'Udon eby',price:8,emoji:'🦐',desc:'Spaghetti di grano duro con gamberi, germogli di soia, cavolo, carote, zucchine e uovo'},
+    {cat:'caldi',num:'216',name:'Udon frutti di mare',price:10,emoji:'🦞',desc:'Spaghetti di grano duro con gamberi, calamari, surimi di granchio, germogli di soia, cavolo, carote'},
+    {cat:'caldi',num:'217',name:'Gnocchi di riso con verdura',price:6,emoji:'🥟',desc:'Gnocchi di riso saltati con bambu, carote e zucchine'},
+    {cat:'caldi',num:'218',name:'Gnocchi di riso con gamberetti',price:8,emoji:'🦐',desc:'Gnocchi di riso saltati con gamberi, bambu, carote e zucchine'},
+    {cat:'caldi',num:'219',name:'Gnocchi di riso frutti di mare',price:8,emoji:'🦞',desc:'Gnocchi di riso saltati con gamberi, calamari, surimi di granchio, bambu, carote e zucchine'},
+    {cat:'caldi',num:'220',name:'Spaghetti di soia con gamberi',price:8,emoji:'🦐',desc:'Spaghetti di soia saltati con gamberi, germogli di soia, cavolo, carote, zucchine'},
+    {cat:'caldi',num:'221',name:'Spaghetti di soia con verdure',price:6,emoji:'🌱',desc:'Spaghetti di soia saltati con germogli di soia, cavolo, carote, zucchine'},
+    {cat:'caldi',num:'222',name:'Spaghetti di soia frutti di mare',price:8,emoji:'🦞',desc:'Spaghetti di soia saltati con gamberi, calamari, surimi di granchio, germogli di soia'},
+    {cat:'caldi',num:'226',name:'Spaghetti di soia con pollo',price:7,emoji:'🍗',desc:'Spaghetti di soia saltati con pollo, germogli di soia, carote e zucchine'},
+    {cat:'caldi',num:'227',name:'Riso sake',price:7,emoji:'🍚',desc:'Riso saltato con salmone, uova, carote e zucchine'},
+    {cat:'caldi',num:'228',name:'Riso eby',price:8,emoji:'🦐',desc:'Riso saltato con gamberi, uova, carote, zucchine'},
+    {cat:'caldi',num:'229',name:'Riso vege',price:5,emoji:'🌱',desc:'Riso saltato con uova, carote e zucchine'},
+    {cat:'caldi',num:'230',name:'Riso bianco',price:2,emoji:'🍚',desc:'Riso al vapore'},
+    {cat:'caldi',num:'231',name:'Riso curry pollo',price:7,emoji:'🍛',desc:'Riso saltato con curry, pollo, carote e zucchine'},
+    {cat:'caldi',num:'232',name:'Riso saltato frutti di mare',price:8,emoji:'🦞',desc:'Riso saltato con gamberi, calamari, surimi di granchio, carote, zucchine e uovo'},
+    {cat:'caldi',num:'233',name:'Riso cantonese',price:7,emoji:'🍚',desc:'Riso saltato con prosciutto cotto, piselli e uovo'},
+    {cat:'caldi',num:'234',name:'Riso venere con gamberi',price:9,emoji:'⚫',desc:'Riso venere saltati con gamberi, mais, carote, zucchine, meat floss e uovo'},
+    {cat:'caldi',num:'246',name:'Pollo in salsa agrodolce',price:7,emoji:'🍗',desc:'Pollo saltato con peperoni e fette di ananas in salsa agrodolce'},
+    {cat:'caldi',num:'247',name:'Gamberi in salsa agrodolce',price:8,emoji:'🦐',desc:'Gamberi saltati con peperoni, ananas in salsa agrodolce'},
+    {cat:'caldi',num:'248',name:'Pollo con mandorle',price:7,emoji:'🍗',desc:'Pollo saltato con mandorle e carote'},
+    {cat:'caldi',num:'249',name:'Pollo al limone',price:7,emoji:'🍋',desc:'Pollo saltato con limone e succo di limone'},
+    {cat:'caldi',num:'250',name:'Pollo al salsa piccante',price:7,emoji:'🌶️',desc:'Pollo saltato con cipolla, peperoni e salsa piccante'},
+    {cat:'caldi',num:'251',name:'Manzo al curry',price:8,emoji:'🥩',desc:'Manzo saltato con cipolla, bambu e curry'},
+    {cat:'caldi',num:'252',name:'Manzo in salsa piccante',price:8,emoji:'🌶️',desc:'Manzo saltato con cipolla, peperoni e salsa piccante'},
+    {cat:'caldi',num:'253',name:'Pollo al curry',price:7,emoji:'🍗',desc:'Pollo saltato con cipolla, bambu e curry'},
+    {cat:'caldi',num:'254',name:'Manzo con bambu e funghi',price:8,emoji:'🥩',desc:'Manzo saltato con bambu e funghi'},
+    {cat:'caldi',num:'267',name:'Scodella di fuoco ai gamberi',price:9,emoji:'🔥',desc:'Gamberi, funghi, carote, cipolla, peperoni, bambu, zucchine'},
+    {cat:'caldi',num:'268',name:'Scodella di fuoco al manzo',price:9,emoji:'🔥',desc:'Manzo, funghi, carote, cipolle, peperoni, bambu, zucchine'},
+    {cat:'caldi',num:'269',name:'Scodella di fuoco ai calamari',price:9,emoji:'🔥',desc:'Calamari, funghi, carote, cipolla, peperoni, bambu, zucchine'},
+    {cat:'caldi',num:'270',name:'Scodella di fuoco al pollo',price:9,emoji:'🔥',desc:'Pollo, funghi, carote, cipolla, peperoni, bambu, zucchine'},
+    // ── FRITTURE ──
+    {cat:'fritture',num:'271',name:'Polpette di zucca',price:5,emoji:'🎃',desc:'Zucca impanata'},
+    {cat:'fritture',num:'272',name:'Crocchette di pollo',price:7,emoji:'🍗',desc:'Crocchette di pollo'},
+    {cat:'fritture',num:'273',name:'Crocchette cheese',price:6,emoji:'🧀',desc:'Crocchette al prosciutto cotto e formaggio'},
+    {cat:'fritture',num:'274',name:'Patate smile',price:5,emoji:'🥔',desc:'Patate impanato fritta'},
+    {cat:'fritture',num:'275',name:'Eby tempura',price:10,emoji:'🦐',desc:'Tempura di gamberi'},
+    {cat:'fritture',num:'276',name:'Toast gamberi',price:6,emoji:'🍞',desc:'Toast con tartare di gamberi e castagna d\'acqua'},
+    {cat:'fritture',num:'277',name:'Code gamberi',price:6,emoji:'🦐',desc:'Gamberi fritti con pangrattato'},
+    {cat:'fritture',num:'278',name:'Ika tempura',price:7,emoji:'🦑',desc:'Tempura di calamari'},
+    {cat:'fritture',num:'279',name:'Stick eby',price:6,emoji:'🦐',desc:'Sfoglia pasta con gamberi'},
+    {cat:'fritture',num:'280',name:'Alette di pollo',price:6,emoji:'🍗',desc:'Alette di pollo fritto'},
+    {cat:'fritture',num:'281',name:'Chele di granchio',price:8,emoji:'🦀',desc:'Chele di granchio impanato'},
+    {cat:'fritture',num:'282',name:'Tempura mista',price:10,emoji:'🍤',desc:'Tempura di gamberi, carote, zucchine, zucca e patate dolci'},
+    {cat:'fritture',num:'283',name:'Patatine fritte',price:4,emoji:'🍟',desc:'Patate fritte'},
+    {cat:'fritture',num:'284',name:'Pollo fritto',price:7,emoji:'🍗',desc:'Pollo impanato'},
+    {cat:'fritture',num:'285',name:'Gamberi mandorle',price:8,emoji:'🌰',desc:'Gamberi impanato fritto con mandorle'},
+    {cat:'fritture',num:'286',name:'Polpette di polipo',price:8,emoji:'🐙',desc:'Polpette di polipo fritte con tonno essicato, salsa teriyaki e maionese'},
+    {cat:'fritture',num:'287',name:'Polpette di taro',price:5,emoji:'🟤',desc:'Polpette con ripieno di taro fritto'},
+  ];
+  const CATS = {
+    antipasti:'Antipasti',
+    bao:'Dim Sum & Bao',
+    poke:'Insalate & Poke',
+    tartare:'Tartare',
+    temaki:'Temaki',
+    onigiri:'Onigiri',
+    oshi:'Oshizushi',
+    hosomaki:'Hosomaki',
+    uramaki:'Uramaki',
+    futomaki:'Futomaki',
+    nigiri:'Nigiri',
+    gunkan:'Gunkan',
+    sashimi:'Sashimi & Speciali',
+    ramen:'Zuppe & Ramen',
+    caldi:'Piatti Caldi',
+    fritture:'Fritture',
+  };
+
+  let cart = {}, delivery = 'asporto', currentCat = 'all';
+  let deliveryFee = 0, addrChecked = false, distKm = null, distText = '', chosenLat = null, chosenLng = null;
+  let suggestTimer = null;
+  let pax = 2, bkSession = null, bkTime = null;
+
+  function fmt(n) { return n.toFixed(2).replace('.', ',') + '€'; }
+
+  function initApp() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth()+1).padStart(2,'0');
+    const dd = String(today.getDate()).padStart(2,'0');
+    document.getElementById('bkDate').min = `${yyyy}-${mm}-${dd}`;
+    document.getElementById('bkDate').value = `${yyyy}-${mm}-${dd}`;
+    renderMenu('all');
+  }
+
+  function switchTab(tab) {
+    ['menu','cart'].forEach(t => {
+      document.getElementById('page'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('active');
+      document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('active');
+    });
+    document.getElementById('page'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+    document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+    if (tab === 'cart') renderCart();
+  }
+
+  function renderMenu(cat) {
+    const body = document.getElementById('menuBody');
+    let html = '';
+    Object.keys(CATS).forEach(c => {
+      if (cat !== 'all' && cat !== c) return;
+      const items = MENU.filter(i => i.cat === c);
+      if (!items.length) return;
+      html += `<div><div class="sec-title">${CATS[c]}</div><div class="sec-hint">Tocca per ingredienti</div><div class="grid">`;
+      items.forEach(item => {
+        const k = item.num + item.name;
+        const qty = cart[k] ? cart[k].qty : 0;
+        html += `<div class="card" onclick="askInfo('${item.name.replace(/'/g,"\\'")}')">
+          <div class="card-img">${item.emoji}</div>
+          <div class="card-body">
+            <span class="card-num">N° ${item.num}</span>
+            <div class="card-name">${item.name}</div>
+            <div class="card-footer">
+              <span class="card-price">${fmt(item.price)}</span>
+              <button class="add-btn${qty>0?' added':''}" onclick="addItem(event,'${item.num}','${item.name.replace(/'/g,"\\'")}',${item.price},'${item.emoji}')">
+                <i class="ti ti-plus" style="font-size:11px"></i>${qty > 0 ? ' '+qty : ''}
+              </button>
+            </div>
+          </div>
+        </div>`;
+      });
+      html += `</div><div class="divider"></div></div>`;
+    });
+    body.innerHTML = html;
+  }
+
+  function filterCat(btn, cat) {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); currentCat = cat; renderMenu(cat);
+  }
+
+  function addItem(e, num, name, price, emoji) {
+    e.stopPropagation();
+    const k = num + name;
+    if (cart[k]) { cart[k].qty++; } else { cart[k] = {num, name, price, emoji, qty:1}; }
+    updateBadge(); renderMenu(currentCat);
+  }
+
+  function updateBadge() {
+    const total = Object.values(cart).reduce((s,i) => s+i.qty, 0);
+    const sum   = Object.values(cart).reduce((s,i) => s+i.qty*i.price, 0);
+    const badge = document.getElementById('cartBadge');
+    badge.textContent = total;
+    badge.style.display = total > 0 ? 'inline-flex' : 'none';
+    const bar = document.getElementById('bottomBar');
+    if (total > 0) {
+      bar.style.display = 'flex';
+      document.getElementById('barCount').textContent = total;
+      document.getElementById('barTotal').textContent = fmt(sum);
+    } else { bar.style.display = 'none'; }
+  }
+
+  function renderCart() {
+    const body = document.getElementById('cartBody');
+    const wrap = document.getElementById('cartWrap');
+    const items = Object.values(cart).filter(i => i.qty > 0);
+    if (!items.length) {
+      body.innerHTML = `<div class="cart-empty">Il carrello è vuoto<br><span style="font-size:.7rem;margin-top:.5rem;display:block">Aggiungi qualcosa dal menu 🍣</span></div>`;
+      wrap.style.display = 'none'; return;
+    }
+    let html = '';
+    items.forEach(item => {
+      const k = item.num + item.name;
+      html += `<div class="cart-item">
+        <div class="ci-emoji">${item.emoji}</div>
+        <div class="ci-info"><div class="ci-name">${item.name}</div><div class="ci-price">${fmt(item.price)} cad.</div></div>
+        <div class="ci-ctrl">
+          <button class="qty-btn" onclick="chQty('${k}',-1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="chQty('${k}',1)">+</button>
+          <button class="del-btn" onclick="delItem('${k}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>`;
+    });
+    body.innerHTML = html; wrap.style.display = 'block';
+    updateSummary(); buildOrderPreview(); updateOrderBtn();
+  }
+
+  function updateSummary() {
+    const items = Object.values(cart).filter(i => i.qty > 0);
+    const sub = items.reduce((s,i) => s+i.qty*i.price, 0);
+    document.getElementById('sumSub').textContent = fmt(sub);
+    if (delivery === 'asporto') {
+      document.getElementById('sumDel').textContent = 'Gratis';
+      document.getElementById('sumTotal').textContent = fmt(sub);
+    } else {
+      if (addrChecked) {
+        document.getElementById('sumDel').textContent = deliveryFee > 0 ? fmt(deliveryFee) : 'Gratis';
+        document.getElementById('sumTotal').textContent = fmt(sub + deliveryFee);
+      } else {
+        document.getElementById('sumDel').textContent = '—';
+        document.getElementById('sumTotal').textContent = '—';
+      }
+    }
+  }
+
+  function chQty(k, d) { if (!cart[k]) return; cart[k].qty += d; if (cart[k].qty <= 0) delete cart[k]; updateBadge(); renderCart(); }
+  function delItem(k) { delete cart[k]; updateBadge(); renderCart(); }
+
+  function setDel(mode) {
+    delivery = mode;
+    document.getElementById('dA').classList.toggle('sel', mode === 'asporto');
+    document.getElementById('dC').classList.toggle('sel', mode === 'consegna');
+    document.getElementById('addrSection').style.display = mode === 'consegna' ? 'block' : 'none';
+    if (mode === 'asporto') { deliveryFee = 0; addrChecked = true; } else { addrChecked = false; deliveryFee = 0; }
+    updateSummary(); buildOrderPreview(); updateOrderBtn();
+  }
+
+  function updateOrderBtn() {
+    const items = Object.values(cart).filter(i => i.qty > 0);
+    const ok = items.length > 0 && (delivery === 'asporto' || (delivery === 'consegna' && addrChecked));
+    document.getElementById('orderBtn').disabled = !ok;
+  }
+
+  function setStatus(type, msg) { const el = document.getElementById('addrStatus'); el.className = 'addr-status ' + type; el.textContent = msg; }
+
+  function onAddrInput() {
+    addrChecked = false; deliveryFee = 0; distKm = null; distText = '';
+    updateSummary(); document.getElementById('previewBox').style.display = 'none';
+    document.getElementById('addrStatus').className = 'addr-status'; updateOrderBtn();
+    const val = document.getElementById('addrInput').value.trim();
+    if (val.length < 4) { document.getElementById('suggestBox').style.display = 'none'; return; }
+    clearTimeout(suggestTimer);
+    suggestTimer = setTimeout(() => fetchSuggestions(val), 500);
+  }
+
+  async function fetchSuggestions(val) {
+    try {
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(val+', Italia')}&components=country:IT&region=it&language=it&key=${GMAPS_KEY}`;
+      const res = await fetch(url); const data = await res.json();
+      const box = document.getElementById('suggestBox');
+      if (!data.results || !data.results.length) { box.style.display = 'none'; return; }
+      const top = data.results.slice(0,4);
+      box.innerHTML = top.map((r,i) => `<div class="suggest-item" onclick="selectAddr(${i})">${r.formatted_address}</div>`).join('');
+      box.style.display = 'block'; box._results = top;
+    } catch(e) { document.getElementById('suggestBox').style.display = 'none'; }
+  }
+
+  async function selectAddr(idx) {
+    const box = document.getElementById('suggestBox');
+    const result = box._results[idx];
+    document.getElementById('addrInput').value = result.formatted_address;
+    box.style.display = 'none';
+    const loc = result.geometry.location;
+    chosenLat = loc.lat; chosenLng = loc.lng;
+    setStatus('checking', 'Calcolo percorso stradale…');
+    try {
+      const url = `https://router.project-osrm.org/route/v1/driving/${SHOP_LNG},${SHOP_LAT};${chosenLng},${chosenLat}?overview=false`;
+      const res = await fetch(url); const data = await res.json();
+      if (!data || data.code !== 'Ok' || !data.routes || !data.routes.length) { setStatus('err','Impossibile calcolare il percorso.'); addrChecked = false; updateOrderBtn(); return; }
+      const km = data.routes[0].distance / 1000;
+      distKm = km; distText = km.toFixed(1) + ' km'; addrChecked = true;
+      if (km <= FREE_KM) { deliveryFee = 0; setStatus('ok', `Percorso: ${distText} — Consegna gratuita`); }
+      else { deliveryFee = FAR_FEE; setStatus('far', `Percorso: ${distText} — Supplemento: 10,00€`); }
+      updateSummary(); buildOrderPreview(); updateOrderBtn();
+    } catch(e) { setStatus('err','Errore di connessione.'); addrChecked = false; updateOrderBtn(); }
+  }
+
+  function buildOrderPreview() {
+    const items = Object.values(cart).filter(i => i.qty > 0);
+    if (!items.length || (delivery === 'consegna' && !addrChecked)) { document.getElementById('previewBox').style.display = 'none'; return; }
+    const sub = items.reduce((s,i) => s+i.qty*i.price, 0);
+    const total = sub + deliveryFee;
+    let msg = '🍣 *ORDINE — Golden Sushi*\n\n';
+    items.forEach((item,idx) => {
+      msg += `${idx+1}. ${item.num !== '—' ? 'N°'+item.num+' ' : ''}${item.name}\n   Prezzo: ${fmt(item.price)} · Qtà: ${item.qty} · Tot: ${fmt(item.price*item.qty)}\n`;
+    });
+    msg += '\n────────────────────\n';
+    msg += `Subtotale: ${fmt(sub)}\n`;
+    if (delivery === 'consegna') { msg += `Consegna: ${deliveryFee > 0 ? fmt(deliveryFee) : 'Gratis'}\n`; if (distText) msg += `Distanza: ${distText}\n`; }
+    msg += `*Totale: ${fmt(total)}*\n────────────────────\n\n`;
+    const addr = document.getElementById('addrInput') ? document.getElementById('addrInput').value.trim() : '';
+    msg += `Modalità: ${delivery === 'consegna' ? 'Consegna a domicilio' : 'Asporto'}`;
+    if (delivery === 'consegna' && addr) msg += `\nIndirizzo: ${addr}`;
+    const note = document.getElementById('noteInput') ? document.getElementById('noteInput').value.trim() : '';
+    if (note) msg += `\nNote: ${note}`;
+    document.getElementById('previewMsg').textContent = msg;
+    document.getElementById('previewBox').style.display = 'block';
+  }
+
+  function sendOrder() {
+    const msg = document.getElementById('previewMsg').textContent;
+    if (!msg) return;
+    window.open('https://wa.me/' + PHONE + '?text=' + encodeURIComponent(msg), '_blank');
+  }
+
+  function changePax(d) { pax = Math.max(1, Math.min(20, pax+d)); document.getElementById('paxVal').textContent = pax; buildBookingPreview(); }
+
+  function onDateChange() {
+    bkSession = null; bkTime = null;
+    document.getElementById('sessionRow').style.display = 'block';
+    document.getElementById('sessLunch').classList.remove('sel');
+    document.getElementById('sessDinner').classList.remove('sel');
+    document.getElementById('timeRow').style.display = 'none';
+    buildBookingPreview();
+  }
+
+  function selectSession(s) {
+    bkSession = s; bkTime = null;
+    document.getElementById('sessLunch').classList.toggle('sel', s === 'lunch');
+    document.getElementById('sessDinner').classList.toggle('sel', s === 'dinner');
+    const slots = s === 'lunch' ? LUNCH_SLOTS : DINNER_SLOTS;
+    document.getElementById('timeGrid').innerHTML = slots.map(t => `<button class="time-chip" onclick="selectTime('${t}')">${t}</button>`).join('');
+    document.getElementById('timeRow').style.display = 'block';
+    buildBookingPreview();
+  }
+
+  function selectTime(t) {
+    bkTime = t;
+    document.querySelectorAll('.time-chip').forEach(c => c.classList.toggle('sel', c.textContent === t));
+    buildBookingPreview();
+  }
+
+  function buildBookingPreview() {
+    const name  = document.getElementById('bkName').value.trim();
+    const phone = document.getElementById('bkPhone').value.trim();
+    const date  = document.getElementById('bkDate').value;
+    const note  = document.getElementById('bkNote').value.trim();
+    const btn   = document.getElementById('bookingBtn');
+    if (!name || !phone || !date || !bkTime) { document.getElementById('bookingPreview').style.display = 'none'; btn.disabled = true; return; }
+    const dateObj = new Date(date);
+    const days   = ['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+    const months = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+    const dateStr = `${days[dateObj.getDay()]} ${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+    const session = bkSession === 'lunch' ? 'Pranzo 🌞' : 'Cena 🌙';
+    let msg = '🍣 *PRENOTAZIONE TAVOLO — Golden Sushi*\n\n';
+    msg += `👤 Nome: ${name}\n📞 Telefono: ${phone}\n👥 Persone: ${pax}\n📅 Data: ${dateStr}\n⏰ Orario: ${bkTime} (${session})\n`;
+    if (note) msg += `📝 Note: ${note}\n`;
+    msg += '\n— Inviato tramite Golden Sushi';
+    document.getElementById('bookingPreviewMsg').textContent = msg;
+    document.getElementById('bookingPreview').style.display = 'block';
+    btn.disabled = false;
+  }
+
+  function sendBooking() {
+    const msg = document.getElementById('bookingPreviewMsg').textContent;
+    if (!msg) return;
+    window.open('https://wa.me/' + PHONE + '?text=' + encodeURIComponent(msg), '_blank');
+  }
+
+  function askInfo(name) { sendPrompt('Quali sono gli ingredienti del piatto: ' + name + '?'); }
+</script>
+</body>
+</html>
